@@ -23,7 +23,7 @@ An interactive Karel programming playground for learning algorithms and programm
 ## 🚀 Quick Start
 
 ### Option 1: Use Online Demo
-Visit the live demo: [Your GitHub Pages URL]
+Visit the live demo: [https://andrewtliem.github.io/karel-mice/]
 
 ### Option 2: Run Locally
 1. Clone this repository
