@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Karel Playground — Single File</title>
+
+<!-- PWA Meta Tags -->
+<meta name="description" content="Interactive Karel programming playground for learning algorithms and programming concepts">
+<meta name="theme-color" content="#06b6d4">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Karel Playground">
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="manifest.json">
+
+<!-- Apple Touch Icons -->
+<link rel="apple-touch-icon" href="icons/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192x192.png">
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icons/icon-96x96.png">
+<style>
+  :root{
+    --bg: #f8fafc;
+    --panel: #ffffff;
+    --ink: #1e293b;
+    --muted: #64748b;
+    --accent: #3b82f6;
+    --accent-2: #06b6d4;
+    --danger: #ef4444;
+    --ok: #10b981;
+    --grid: #e2e8f0;
+    --wall: #8b5cf6;
+    --border: #cbd5e1;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --gradient-start: #3b82f6;
+    --gradient-end: #1d4ed8;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; 
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    color:var(--ink); 
+    font:500 14px/1.4 ui-sans-serif,system-ui,Segoe UI,Roboto,Inter,Apple Color Emoji;
+  }
+  .app{display:grid; grid-template-rows:auto 1fr; height:100%;}
+  header{
+    display:flex; gap:10px; align-items:center; padding:16px 20px;
+    border-bottom:1px solid var(--border); 
+    background:rgba(255,255,255,0.95); 
+    backdrop-filter: blur(12px);
+    position:sticky; top:0; z-index:2;
+    box-shadow: 0 1px 3px var(--shadow);
+  }
+  header h1{
+    font-size:18px; 
+    letter-spacing:.4px; 
+    margin:0; 
+    background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight:800;
+  }
+  .spacer{flex:1}
+  .btn, .seg input[type=radio]+label{
+    border:1px solid var(--border); 
+    background:var(--panel); 
+    color:var(--ink); 
+    padding:10px 16px;
+    border-radius:12px; 
+    cursor:pointer; 
+    transition:.2s all ease;
+    user-select:none; 
+    display:inline-flex; 
+    gap:8px; 
+    align-items:center;
+    font-weight:500;
+    box-shadow: 0 1px 2px var(--shadow);
+  }
+  .btn:hover{
+    border-color:var(--accent); 
+    background:var(--bg);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+  }
+  .btn:active{transform:translateY(0px)}
+  .btn.ghost{background:transparent; border-color: transparent;}
+  .btn.ghost:hover{background: rgba(59, 130, 246, 0.1); border-color: var(--accent);}
+  .btn.ok{
+    background:linear-gradient(135deg, #10b981, #059669); 
+    border-color:#059669; 
+    color:white;
+  }
+  .btn.ok:hover{
+    background:linear-gradient(135deg, #059669, #047857);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  }
+  .btn.danger{
+    background:linear-gradient(135deg, #ef4444, #dc2626); 
+    border-color:#dc2626; 
+    color:white;
+  }
+  .btn.danger:hover{
+    background:linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  }
+  .row{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+  .seg{
+    display:flex; 
+    gap:6px; 
+    padding:6px; 
+    background:var(--bg); 
+    border:1px solid var(--border); 
+    border-radius:14px;
+    box-shadow: inset 0 1px 2px var(--shadow);
+  }
+  .seg input{display:none}
+  .seg label{
+    padding:8px 12px; 
+    border-radius:10px; 
+    border:1px solid transparent;
+    transition: .2s all ease;
+    font-weight:500;
+  }
+  .seg input:checked+label{
+    background:linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+    color:white;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+  }
+  .speed{display:flex; align-items:center; gap:8px}
+  .speed input{
+    accent-color:var(--accent); 
+    width:160px;
+    height:6px;
+    border-radius:3px;
+  }
+  main{display:grid; grid-template-columns:minmax(300px,1fr) minmax(360px,1.1fr); height:calc(100vh - 80px);}
+  .editor{
+    border-right:1px solid var(--border); 
+    position:relative; 
+    display:flex; 
+    flex-direction:column;
+    background: var(--panel);
+    box-shadow: 2px 0 8px var(--shadow);
+  }
+  .editor textarea{
+    flex:1; 
+    background:var(--bg); 
+    color:var(--ink); 
+    border:none; 
+    outline:none; 
+    padding:20px 20px 70px 20px;
+    font:500 14px/1.6 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+    resize: none;
+    line-height: 1.6;
+    letter-spacing: 0.3px;
+  }
+  
+  /* Simple Code Editor */
+  .code-editor {
+    position: relative;
+    flex: 1;
+    background: var(--bg);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Code Editor Textarea */
+  .code-editor textarea {
+    padding: 20px;
+    background: transparent;
+    color: var(--ink);
+    flex: 1;
+    min-height: 200px;
+    line-height: 1.5;
+    font-size: 14px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    resize: none;
+    border: none;
+    outline: none;
+  }
+  
+  .code-editor textarea:focus {
+    outline: none;
+  }
+  
+
+  .hintbar{
+    padding:14px 18px; 
+    color:var(--muted);
+    border-top:1px solid var(--border); 
+    background:linear-gradient(180deg,var(--bg) 0%, var(--panel) 100%);
+    font-size: 13px;
+    margin-top: auto;
+  }
+  .stage{display:grid; grid-template-rows:1fr auto; min-height:0; background: var(--panel);}
+  .canvas-wrap{display:flex; align-items:center; justify-content:center; padding:20px}
+  canvas{
+    background:var(--bg); 
+    border-radius:20px; 
+    box-shadow:0 8px 32px var(--shadow), inset 0 0 0 1px var(--border);
+    border: 2px solid var(--border);
+  }
+  .controls{
+    border-top:1px solid var(--border); 
+    padding:16px 20px; 
+    display:flex; 
+    gap:12px; 
+    align-items:center; 
+    flex-wrap:wrap;
+    background: var(--bg);
+  }
+  .badge{
+    padding:6px 12px; 
+    border-radius:999px; 
+    background:var(--panel); 
+    border:1px solid var(--border); 
+    color:var(--ink);
+    font-weight:500;
+    box-shadow: 0 1px 2px var(--shadow);
+  }
+  dialog{
+    border:1px solid var(--border); 
+    background:var(--panel); 
+    color:var(--ink); 
+    border-radius:20px; 
+    padding:0; 
+    width:min(820px,92vw);
+    box-shadow: 0 20px 60px var(--shadow);
+  }
+  dialog[open]{animation:pop .3s ease-out}
+  @keyframes pop{from{transform:scale(.95); opacity:0} to{transform:scale(1); opacity:1}}
+  .modal-head{
+    display:flex; 
+    align-items:center; 
+    justify-content:space-between; 
+    padding:16px 20px; 
+    border-bottom:1px solid var(--border);
+    background: var(--bg);
+    border-radius: 20px 20px 0 0;
+  }
+  .modal-body{padding:20px}
+  .gridCfg{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+  .gridCfg label{
+    display:flex; 
+    gap:8px; 
+    align-items:center; 
+    justify-content:space-between; 
+    background:var(--bg); 
+    border:1px solid var(--border); 
+    padding:14px 16px; 
+    border-radius:12px;
+    transition: .2s all ease;
+  }
+  .gridCfg label:hover{
+    border-color: var(--accent);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+  }
+  .gridCfg input, .gridCfg select{
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--panel);
+    color: var(--ink);
+    font-size: 14px;
+  }
+  .tool-hint{color:var(--accent); font-weight:600}
+  .list{display:flex; gap:8px; flex-wrap:wrap}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+  .link{color:var(--accent); text-decoration:underline dotted}
+  
+  /* Enhanced tool icons */
+  .tool-icon {
+    font-size: 16px;
+    margin-right: 4px;
+  }
+  
+  /* Better status badge */
+  #status {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border: none;
+    font-weight: 600;
+  }
+  
+  /* Improved canvas styling */
+  canvas {
+    transition: all 0.3s ease;
+  }
+  
+  canvas:hover {
+    box-shadow: 0 12px 40px var(--shadow), inset 0 0 0 1px var(--accent);
+  }
+  
+  /* Enhanced button animations */
+  .btn {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  .btn:hover::before {
+    left: 100%;
+  }
+  
+  /* Editor Tabs */
+  .editor-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+  
+  .tab-btn {
+    padding: 12px 20px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .tab-btn:hover {
+    color: var(--ink);
+    background: rgba(59, 130, 246, 0.1);
+  }
+  
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    background: rgba(59, 130, 246, 0.05);
+  }
+  
+  /* Tab Content */
+  .tab-content {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+  }
+  
+  .tab-content.active {
+    display: flex;
+  }
+  
+  /* Documentation Styles */
+  .docs-content {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+  }
+  
+  .docs-content h2 {
+    color: var(--accent);
+    margin: 0 0 20px 0;
+    font-size: 24px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 10px;
+  }
+  
+  .docs-content h3 {
+    color: var(--ink);
+    margin: 25px 0 15px 0;
+    font-size: 18px;
+    border-left: 4px solid var(--accent);
+    padding-left: 15px;
+  }
+  
+  .docs-content h4 {
+    color: var(--ink);
+    margin: 15px 0 10px 0;
+    font-size: 16px;
+  }
+  
+  .docs-content h5 {
+    color: var(--muted);
+    margin: 10px 0 5px 0;
+    font-size: 14px;
+  }
+  
+  .docs-content p {
+    color: var(--ink);
+    line-height: 1.6;
+    margin: 10px 0;
+  }
+  
+  .docs-content ul {
+    color: var(--ink);
+    line-height: 1.6;
+    margin: 10px 0;
+    padding-left: 20px;
+  }
+  
+  .docs-content li {
+    margin: 5px 0;
+  }
+  
+  .docs-section {
+    margin: 25px 0;
+    padding: 20px;
+    background: var(--bg);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  
+  .command-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 15px 0;
+  }
+  
+  .command-item {
+    background: var(--panel);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  
+  .command-item h4 {
+    color: var(--accent);
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .command-item ul {
+    margin: 0;
+    padding-left: 15px;
+  }
+  
+  .command-item li {
+    margin: 5px 0;
+    font-size: 13px;
+  }
+  
+  .code-example {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+  }
+  
+  .code-example h4 {
+    margin: 0 0 10px 0;
+    color: var(--accent);
+    font-size: 14px;
+  }
+  
+  .code-example h5 {
+    margin: 15px 0 8px 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  
+  .code-example pre {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px;
+    margin: 10px 0;
+    overflow-x: auto;
+  }
+  
+  .code-example code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+  
+  .docs-content code {
+    background: var(--bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 12px;
+    color: var(--accent);
+    border: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>🚀 Karel Playground</h1>
+    <div class="spacer"></div>
+    <div class="row">
+      <button class="btn" id="worldBtn">🌍 World Builder</button>
+      <div class="seg" id="toolSeg" title="World editor tools">
+        <input type="radio" name="tool" id="tool_ball" value="ball" checked>
+        <label for="tool_ball">🟣 Ball</label>
+        <input type="radio" name="tool" id="tool_remove" value="remove">
+        <label for="tool_remove">❌ Remove</label>
+        <input type="radio" name="tool" id="tool_wall" value="wall">
+        <label for="tool_wall">🧱 Wall</label>
+        <input type="radio" name="tool" id="tool_karel" value="karel">
+        <label for="tool_karel">🐶 Karel</label>
+        <input type="radio" name="tool" id="tool_view" value="view">
+        <label for="tool_view">👁 View</label>
+      </div>
+      <div class="speed"><span class="badge">⚡ Speed</span><input id="speed" type="range" min="1" max="100" value="55"></div>
+      <button class="btn ghost" id="saveWorld">💾 Save</button>
+      <button class="btn ghost" id="loadWorld">📁 Load</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="editor">
+      <div class="editor-tabs">
+        <button class="tab-btn active" data-tab="code">📝 Code</button>
+        <button class="tab-btn" data-tab="docs">📚 Docs</button>
+      </div>
+      
+      <div class="tab-content active" id="code-tab">
+        <div class="code-editor">
+          <textarea id="code" placeholder="// Write your Karel code here..."></textarea>
+        </div>
+        <div class="hintbar">
+          <strong>📚 API:</strong> <span class="mono">move()</span>, <span class="mono">turn_left()</span>, <span class="mono">put_ball()</span>, <span class="mono">take_ball()</span>,
+          <span class="mono">front_is_clear()</span>, <span class="mono">balls_present()</span>, <span class="mono">facing_north()</span>… Use JS <span class="mono">if</span>/<span class="mono">while</span>/<span class="mono">for</span>.
+        </div>
+      </div>
+      
+      <div class="tab-content" id="docs-tab">
+        <div class="docs-content">
+          <h2>🐶 Karel Programming Guide</h2>
+          
+          <div class="docs-section">
+            <h3>🚀 Karel's Built-in Commands</h3>
+            <div class="command-grid">
+              <div class="command-item">
+                <h4>Movement</h4>
+                <ul>
+                  <li><code>move()</code> - Move forward one step</li>
+                  <li><code>turn_left()</code> - Turn 90° to the left</li>
+                </ul>
+              </div>
+              <div class="command-item">
+                <h4>Ball Handling</h4>
+                <ul>
+                  <li><code>put_ball()</code> - Place a ball on current cell</li>
+                  <li><code>take_ball()</code> - Pick up a ball from current cell</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="docs-section">
+            <h3>🔍 Karel Conditions</h3>
+            <div class="command-grid">
+              <div class="command-item">
+                <h4>Direction Checks</h4>
+                <ul>
+                  <li><code>facing_north()</code> - Is Karel facing north?</li>
+                  <li><code>facing_south()</code> - Is Karel facing south?</li>
+                  <li><code>facing_east()</code> - Is Karel facing east?</li>
+                  <li><code>facing_west()</code> - Is Karel facing west?</li>
+                </ul>
+              </div>
+              <div class="command-item">
+                <h4>Path Checks</h4>
+                <ul>
+                  <li><code>front_is_clear()</code> - Can Karel move forward?</li>
+                  <li><code>left_is_clear()</code> - Can Karel move left?</li>
+                  <li><code>right_is_clear()</code> - Can Karel move right?</li>
+                </ul>
+              </div>
+              <div class="command-item">
+                <h4>Ball Checks</h4>
+                <ul>
+                  <li><code>balls_present()</code> - Are there balls on this cell?</li>
+                  <li><code>no_balls_present()</code> - Are there no balls on this cell?</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="docs-section">
+            <h3>⚙️ Writing Functions</h3>
+            <p>Functions are like teaching Karel new words. You can name them whatever you want (no spaces allowed).</p>
+            <div class="code-example">
+              <h4>Example Functions:</h4>
+              <pre><code>function turn_right() {
+  turn_left();
+  turn_left();
+  turn_left();
+}
+
+function turn_around() {
+  turn_left();
+  turn_left();
+}
+
+function your_function_name() {
+  // Code that will run when you call this function
+}</code></pre>
+            </div>
+            <div class="code-example">
+              <h4>Calling Functions:</h4>
+              <pre><code>// Call turn_around() once
+turn_around();
+
+// Call turn_right() twice
+turn_right();
+turn_right();</code></pre>
+            </div>
+          </div>
+
+          <div class="docs-section">
+            <h3>🔀 Conditional Statements (If/Else)</h3>
+            <p>Use if statements to make decisions based on conditions.</p>
+            <div class="code-example">
+              <h4>Basic If Statement:</h4>
+              <pre><code>if (condition) {
+  // Code that runs if condition is true
+}</code></pre>
+            </div>
+            <div class="code-example">
+              <h4>If/Else Statement:</h4>
+              <pre><code>if (condition) {
+  // Code that runs if condition is true
+} else {
+  // Code that runs if condition is false
+}</code></pre>
+            </div>
+            <div class="code-example">
+              <h4>Real Examples:</h4>
+              <pre><code>if (front_is_clear()) {
+  move();
+}
+
+if (balls_present()) {
+  take_ball();
+} else {
+  move();
+}</code></pre>
+            </div>
+          </div>
+
+          <div class="docs-section">
+            <h3>🔄 Loops</h3>
+            <p>Loops repeat code multiple times.</p>
+            <div class="code-example">
+              <h4>While Loops:</h4>
+              <p>Use when you want to repeat until a condition becomes false.</p>
+              <pre><code>while (condition) {
+  // Code that runs while condition is true
+}</code></pre>
+              <h5>Example:</h5>
+              <pre><code>// Move until hitting a wall
+while (front_is_clear()) {
+  move();
+}</code></pre>
+            </div>
+            <div class="code-example">
+              <h4>For Loops:</h4>
+              <p>Use when you want to repeat a fixed number of times.</p>
+              <pre><code>for (let i = 0; i < count; i++) {
+  // Code that runs 'count' times
+}</code></pre>
+              <h5>Examples:</h5>
+              <pre><code>// Put down 10 balls
+for (let i = 0; i < 10; i++) {
+  put_ball();
+}
+
+// Put down 5 balls and move after each
+for (let i = 0; i < 5; i++) {
+  put_ball();
+  move();
+}</code></pre>
+            </div>
+          </div>
+
+          <div class="docs-section">
+            <h3>💭 Comments</h3>
+            <p>Comments help explain your code to others (and yourself later).</p>
+            <div class="code-example">
+              <h4>Single Line Comments:</h4>
+              <pre><code>// This is a single line comment
+move(); // You can also comment after code</code></pre>
+            </div>
+            <div class="code-example">
+              <h4>Multi-line Comments:</h4>
+              <pre><code>/*
+This is a multi-line comment
+that can span several lines
+to describe your code
+*/</code></pre>
+            </div>
+          </div>
+
+          <div class="docs-section">
+            <h3>🎯 Tips & Best Practices</h3>
+            <ul>
+              <li><strong>Use for-loops</strong> when you want to repeat something a fixed number of times</li>
+              <li><strong>Use while-loops</strong> when you want to repeat something as long as a condition is true</li>
+              <li><strong>Always use parentheses</strong> after function names: <code>move()</code>, not <code>move</code></li>
+              <li><strong>Indent your code</strong> inside functions, loops, and if statements for readability</li>
+              <li><strong>Test your code</strong> step by step using the Step button</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="stage">
+      <div class="canvas-wrap">
+        <canvas id="cv" width="700" height="700"></canvas>
+      </div>
+      <div class="controls">
+        <button class="btn ok" id="run">▶️ Run</button>
+        <button class="btn" id="step">⏭️ Step</button>
+        <button class="btn" id="pause">⏸️ Pause</button>
+        <button class="btn danger" id="reset">🔄 Reset</button>
+        <button class="btn" id="clearWalls">🧹 Clear Walls</button>
+        <button class="btn" id="debugWorld">🐛 Debug</button>
+        <span class="spacer"></span>
+        <span class="badge" id="stepCounter">Step: 0</span>
+        <span class="badge" id="status">Ready</span>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- World Modal -->
+<dialog id="worldDlg">
+  <div class="modal-head">
+    <div class="row">
+      <strong>🌍 World Builder</strong>
+      <span class="tool-hint" id="toolHint">Tool: Ball</span>
+    </div>
+    <button class="btn ghost" id="closeWorld">✕</button>
+  </div>
+  <div class="modal-body">
+    <div class="gridCfg">
+      <label>📐 Columns <input id="cols" type="number" min="2" max="40" value="12"></label>
+      <label>📏 Rows <input id="rows" type="number" min="2" max="40" value="12"></label>
+      <label>🎯 Preset
+        <select id="preset">
+          <option value="blank">Blank</option>
+          <option value="maze">Simple Maze</option>
+          <option value="balls">Sprinkle Balls</option>
+        </select>
+      </label>
+      <button class="btn" id="applySize">✨ Apply & New Grid</button>
+    </div>
+    <p style="color: var(--muted); margin-top: 16px; padding: 12px; background: var(--bg); border-radius: 8px;">
+      <strong>💡 Tip:</strong> In <b>Wall</b> tool, click near cell edges to toggle walls. In <b>Karel</b> tool, click a cell to place and right-click to rotate.
+    </p>
+  </div>
+</dialog>
+
+<script>
+/* ===================== State & Utils ===================== */
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+const deepCopy = obj => JSON.parse(JSON.stringify(obj));
+const DIRS = ["E","N","W","S"]; // clockwise, start East to match CodeHS default facing east
+const VEC = {E:[1,0], N:[0,-1], W:[-1,0], S:[0,1]};
+const $ = sel => document.querySelector(sel);
+
+// Step counter
+let stepCount = 0;
+
+
+
+const canvas = $("#cv");
+const ctx = canvas.getContext("2d",{alpha:false});
+let gridCols=12, gridRows=12, cellSize=48, margin=24;
+
+function resizeCanvasForGrid(){
+  const maxSide = Math.min(750, Math.min(window.innerWidth-380, window.innerHeight-180));
+  cellSize = Math.floor( (maxSide - margin*2) / Math.max(gridCols, gridRows) );
+  const w = cellSize*gridCols + margin*2;
+  const h = cellSize*gridRows + margin*2;
+  canvas.width = w; canvas.height = h;
+}
+
+/* World representation */
+function makeWorld(cols, rows){
+  return {
+    cols, rows,
+    balls: Array.from({length:rows},()=>Array(cols).fill(0)), // per-cell counts
+    // walls between cells: vertical[y][x] is wall between (x,y) and (x+1,y)
+    vWalls: Array.from({length:rows},()=>Array(cols-1).fill(false)),
+    // horizontal[y][x] is wall between (x,y) and (x,y+1)
+    hWalls: Array.from({length:rows-1},()=>Array(cols).fill(false)),
+    karel: {x:0, y:rows-1, dir:"E"}
+  };
+}
+let initialWorld = makeWorld(gridCols,gridRows);
+let world = deepCopy(initialWorld);
+let frames = []; // animation frames (snapshots)
+let playing = false, paused = false, stepping = false;
+let speedEl = $("#speed");
+let statusEl = $("#status");
+
+/* ===================== Rendering ===================== */
+function draw(){
+  resizeCanvasForGrid();
+  const {cols, rows, balls, vWalls, hWalls, karel} = world;
+  const W = canvas.width, H = canvas.height;
+  ctx.fillStyle = "#f8fafc"; ctx.fillRect(0,0,W,H);
+
+  // grid background
+  ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--grid');
+  ctx.lineWidth = 1;
+  for(let i=0;i<=cols;i++){
+    const x = margin + i*cellSize;
+    ctx.beginPath(); ctx.moveTo(x, margin); ctx.lineTo(x, margin+rows*cellSize); ctx.stroke();
+  }
+  for(let j=0;j<=rows;j++){
+    const y = margin + j*cellSize;
+    ctx.beginPath(); ctx.moveTo(margin, y); ctx.lineTo(margin+cols*cellSize, y); ctx.stroke();
+  }
+
+  // walls
+  ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--wall');
+  ctx.lineWidth = 4;
+  // vertical
+  for(let y=0;y<rows;y++){
+    for(let x=0;x<cols-1;x++){
+      if(vWalls[y][x]){
+        const x0 = margin + (x+1)*cellSize;
+        const y0 = margin + y*cellSize;
+        ctx.beginPath(); ctx.moveTo(x0, y0+2); ctx.lineTo(x0, y0+cellSize-2); ctx.stroke();
+      }
+    }
+  }
+  // horizontal
+  for(let y=0;y<rows-1;y++){
+    for(let x=0;x<cols;x++){
+      if(hWalls[y][x]){
+        const y0 = margin + (y+1)*cellSize;
+        const x0 = margin + x*cellSize;
+        ctx.beginPath(); ctx.moveTo(x0+2, y0); ctx.lineTo(x0+cellSize-2, y0); ctx.stroke();
+      }
+    }
+  }
+
+  // balls
+  for(let y=0;y<rows;y++){
+    for(let x=0;x<cols;x++){
+      const c = balls[y][x];
+      if(c>0){
+        const cx = margin + x*cellSize + cellSize/2;
+        const cy = margin + y*cellSize + cellSize/2;
+        ctx.beginPath(); ctx.arc(cx, cy, Math.min(16, cellSize*0.28), 0, Math.PI*2);
+        ctx.fillStyle = "#3b82f6"; ctx.fill();
+        ctx.fillStyle = "#ffffff"; ctx.font = `bold ${Math.max(10,Math.floor(cellSize*0.32))}px ui-monospace`;
+        ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText(String(c), cx, cy);
+      }
+    }
+  }
+
+  // karel
+  drawKarel(karel.x,karel.y,karel.dir);
+}
+
+function drawKarel(x,y,dir){
+  const cx = margin + x*cellSize + cellSize/2;
+  const cy = margin + y*cellSize + cellSize/2;
+  const r = Math.min(18, cellSize*0.36);
+
+  ctx.save();
+  ctx.translate(cx,cy);
+  const angle = {E:0,N:-Math.PI/2,W:Math.PI,S:Math.PI/2}[dir];
+  ctx.rotate(angle);
+
+  // Draw Karel as a cute dog/cat with clear direction
+  // Body (rounded rectangle)
+  ctx.beginPath();
+  ctx.roundRect(-r*0.8, -r*0.6, r*1.6, r*1.2, r*0.3);
+  ctx.fillStyle="#06b6d4"; 
+  ctx.fill();
+  ctx.strokeStyle="#ffffff"; 
+  ctx.lineWidth=2; 
+  ctx.stroke();
+
+  // Head (circle)
+  ctx.beginPath();
+  ctx.arc(r*0.3, 0, r*0.5, 0, Math.PI*2);
+  ctx.fillStyle="#06b6d4"; 
+  ctx.fill();
+  ctx.strokeStyle="#ffffff"; 
+  ctx.lineWidth=2; 
+  ctx.stroke();
+
+  // Eyes
+  ctx.fillStyle="#ffffff";
+  ctx.beginPath();
+  ctx.arc(r*0.4, -r*0.15, r*0.12, 0, Math.PI*2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(r*0.4, r*0.15, r*0.12, 0, Math.PI*2);
+  ctx.fill();
+
+  // Pupils
+  ctx.fillStyle="#1e293b";
+  ctx.beginPath();
+  ctx.arc(r*0.42, -r*0.15, r*0.06, 0, Math.PI*2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(r*0.42, r*0.15, r*0.06, 0, Math.PI*2);
+  ctx.fill();
+
+  // Nose
+  ctx.fillStyle="#1e293b";
+  ctx.beginPath();
+  ctx.arc(r*0.6, 0, r*0.08, 0, Math.PI*2);
+  ctx.fill();
+
+  // Ears (triangular)
+  ctx.fillStyle="#06b6d4";
+  ctx.beginPath();
+  ctx.moveTo(r*0.2, -r*0.7);
+  ctx.lineTo(r*0.4, -r*0.9);
+  ctx.lineTo(r*0.6, -r*0.7);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle="#ffffff";
+  ctx.lineWidth=1;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(r*0.2, r*0.7);
+  ctx.lineTo(r*0.4, r*0.9);
+  ctx.lineTo(r*0.6, r*0.7);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // Direction indicator (arrow on body)
+  ctx.fillStyle="#ffffff";
+  ctx.beginPath();
+  ctx.moveTo(-r*0.3, 0);
+  ctx.lineTo(-r*0.6, -r*0.2);
+  ctx.lineTo(-r*0.6, r*0.2);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.restore();
+}
+
+/* ===================== World Helpers ===================== */
+function inBounds(x,y){return x>=0 && x<world.cols && y>=0 && y<world.rows;}
+function wallBetween(x1,y1,x2,y2){
+  if(x1===x2 && Math.abs(y1-y2)===1){
+    const y = Math.min(y1,y2);
+    return world.hWalls[y][x1];
+  }
+  if(y1===y2 && Math.abs(x1-x2)===1){
+    const x = Math.min(x1,x2);
+    return world.vWalls[y1][x];
+  }
+  return true;
+}
+
+/* ===================== Animation ===================== */
+function snapshot(){ frames.push(deepCopy(world)); }
+function resetToInitial(){ 
+  world = deepCopy(initialWorld); 
+  frames = []; 
+  stepCount = 0; // Reset step counter
+  updateStepCounter(); // Update display
+  snapshot(); 
+  draw(); 
+  setStatus("Ready"); 
+}
+
+/* ===================== Karel API ===================== */
+function makeAPI(){
+  return {
+    move(){
+      const {karel} = world;
+      const [dx,dy] = VEC[karel.dir];
+      const nx = karel.x + dx, ny = karel.y + dy;
+      if(!inBounds(nx,ny) || wallBetween(karel.x,karel.y,nx,ny)){
+        throw new Error("Karel bumped into a wall.");
+      }
+      karel.x = nx; karel.y = ny;
+      snapshot();
+    },
+    turn_left(){ 
+      rotateLeft(); 
+      snapshot(); 
+    },
+    put_ball(){
+      world.balls[world.karel.y][world.karel.x] += 1; 
+      snapshot();
+    },
+    take_ball(){
+      const {x,y} = world.karel;
+      if(world.balls[y][x] <= 0) throw new Error("No balls to take here.");
+      world.balls[y][x] -= 1; 
+      snapshot();
+    },
+
+    front_is_clear(){
+      const {karel} = world;
+      const [dx,dy]=VEC[karel.dir]; const nx=karel.x+dx, ny=karel.y+dy;
+      return inBounds(nx,ny) && !wallBetween(karel.x,karel.y,nx,ny);
+    },
+    left_is_clear(){
+      const d = leftOf(world.karel.dir);
+      const [dx,dy]=VEC[d]; const nx=world.karel.x+dx, ny=world.karel.y+dy;
+      return inBounds(nx,ny) && !wallBetween(world.karel.x,world.karel.y,nx,ny);
+    },
+    right_is_clear(){
+      const d = rightOf(world.karel.dir);
+      const [dx,dy]=VEC[d]; const nx=world.karel.x+dx, ny=world.karel.y+dy;
+      return inBounds(nx,ny) && !wallBetween(world.karel.x,world.karel.y,nx,ny);
+    },
+
+    facing_north(){return world.karel.dir==="N"},
+    facing_south(){return world.karel.dir==="S"},
+    facing_east(){return world.karel.dir==="E"},
+    facing_west(){return world.karel.dir==="W"},
+    not_facing_north(){return world.karel.dir!=="N"},
+    not_facing_south(){return world.karel.dir!=="S"},
+    not_facing_east(){return world.karel.dir!=="E"},
+    not_facing_west(){return world.karel.dir!=="W"},
+
+    balls_present(){return world.balls[world.karel.y][world.karel.x] > 0},
+    no_balls_present(){return world.balls[world.karel.y][world.karel.x] === 0},
+
+    // convenience
+    turn_right(){ 
+      rotateRight(); 
+      snapshot(); 
+    },
+    turn_around(){ 
+      rotateRight(); 
+      rotateRight(); 
+      snapshot(); 
+    }
+  };
+}
+function leftOf(d){ return {E:"N",N:"W",W:"S",S:"E"}[d]; }
+function rightOf(d){ return {E:"S",S:"W",W:"N",N:"E"}[d]; }
+function rotateLeft(){ world.karel.dir = leftOf(world.karel.dir); }
+function rotateRight(){ world.karel.dir = rightOf(world.karel.dir); }
+
+/* ===================== Runner ===================== */
+function setStatus(t){ 
+  statusEl.textContent=t; 
+  // Update the status badge styling based on the status
+  if (t.includes("Running")) {
+    statusEl.className = "badge";
+    statusEl.style.background = "linear-gradient(135deg, #3b82f6, #1d4ed8)";
+    statusEl.style.color = "white";
+  } else if (t.includes("Paused")) {
+    statusEl.className = "badge";
+    statusEl.style.background = "linear-gradient(135deg, #f59e0b, #d97706)";
+    statusEl.style.color = "white";
+  } else if (t.includes("Done")) {
+    statusEl.className = "badge";
+    statusEl.style.background = "linear-gradient(135deg, #10b981, #059669)";
+    statusEl.style.color = "white";
+  } else if (t.includes("Error")) {
+    statusEl.className = "badge";
+    statusEl.style.background = "linear-gradient(135deg, #ef4444, #dc2626)";
+    statusEl.style.color = "white";
+  } else {
+    statusEl.className = "badge";
+    statusEl.style.background = "var(--panel)";
+    statusEl.style.color = "var(--ink)";
+  }
+}
+
+function updateStepCounter() {
+  const stepCounterEl = $("#stepCounter");
+  stepCounterEl.textContent = `Step: ${stepCount}`;
+}
+function msPerFrame(){ // map slider 1..100 to 0..220ms
+  const v = Number(speedEl.value); return Math.round(300 - v*2.6);
+}
+async function playFrames(){
+  if(frames.length===0){draw(); return;}
+  playing = true; paused = false;
+  setStatus("Running…");
+  
+  // Count steps during frame playback, not during execution
+  let frameCount = 0;
+  
+  while(frames.length>0){
+    if(paused && !stepping){ await new Promise(r=>setTimeout(r,80)); continue; }
+    const f = frames.shift();
+    world = f; draw();
+    
+    // Increment step counter for each frame (each Karel action)
+    frameCount++;
+    stepCount = frameCount;
+    updateStepCounter();
+    
+    if(stepping){ 
+      stepping=false; 
+      paused=true; 
+      setStatus("Paused - Click Step to continue");
+      break; 
+    }
+    await new Promise(r=>setTimeout(r, msPerFrame()));
+  }
+  if(frames.length===0){ setStatus("Done"); playing=false; }
+}
+function secureEval(userCode, api){
+  const apiNames = Object.keys(api);
+  // Create a function with API names as parameters (no access to global window)
+  const fn = new Function(...apiNames, `"use strict";\n${userCode}\n`);
+  fn(...apiNames.map(k=>api[k]));
+}
+
+
+function runUserCode(){
+  frames = []; 
+  stepCount = 0; // Reset step counter for new execution
+  updateStepCounter(); // Update display
+  snapshot(); // initial frame for smooth start
+  const api = makeAPI();
+  
+  try{
+    secureEval($("#code").value, api);
+    // finish with a final snapshot to render any last state
+    snapshot();
+    paused=false; stepping=false;
+    playFrames();
+  }catch(err){
+    setStatus("Error: "+err.message);
+    draw();
+  }
+}
+
+/* ===================== World Editing ===================== */
+const dlg = $("#worldDlg");
+$("#worldBtn").onclick = ()=>{ dlg.showModal(); updateToolHint(); };
+$("#closeWorld").onclick = ()=> dlg.close();
+$("#applySize").onclick = ()=>{
+  const c = clamp(parseInt($("#cols").value||12,10),2,40);
+  const r = clamp(parseInt($("#rows").value||12,10),2,40);
+  gridCols=c; gridRows=r;
+  const preset = $("#preset").value;
+  initialWorld = presetWorld(c,r,preset);
+  // Ensure complete reset when changing world size
+  resetToInitial();
+  draw();
+  setStatus("New grid created - Ready");
+};
+function presetWorld(c,r,which){
+  const w = makeWorld(c,r);
+  if(which==="maze"){
+    for(let y=1;y<r-1;y++) if(y%2===1) for(let x=0;x<c-1;x++) w.vWalls[y][x]=true;
+    for(let x=1;x<c-1;x++) if(x%2===0) for(let y=0;y<r-1;y++) w.hWalls[y][x]=true;
+    w.karel = {x:0, y:r-1, dir:"E"};
+  }else if(which==="balls"){
+    for(let y=0;y<r;y++) for(let x=0;x<c;x++){ if((x+y)%3===0) w.balls[y][x]=1; }
+    w.karel = {x:0, y:r-1, dir:"E"};
+  }
+  return w;
+}
+
+/* Mouse editing on canvas */
+let currentTool = "ball";
+document.querySelectorAll('#toolSeg input').forEach(r=>{
+  r.addEventListener('change', (e)=>{ currentTool = e.target.value; updateToolHint(); });
+});
+function updateToolHint(){
+  const names={ball:"Ball",remove:"Remove",wall:"Wall",karel:"Karel",view:"View"};
+  $("#toolHint").textContent = "Tool: "+names[currentTool];
+}
+canvas.addEventListener('contextmenu', e=>{ if(currentTool==="karel") e.preventDefault(); });
+
+canvas.addEventListener('mousedown', e=>{
+  const {x,y} = canvasToCell(e.offsetX,e.offsetY);
+  if(x===-1) return;
+  if(currentTool==="ball"){
+    world.balls[y][x] = (world.balls[y][x]+1) % 10;
+  }else if(currentTool==="remove"){
+    world.balls[y][x] = Math.max(0, world.balls[y][x] - 1);
+  }else if(currentTool==="karel"){
+    if(e.button===2){ world.karel.dir = rightOf(world.karel.dir); }
+    else{ world.karel = {x,y,dir:world.karel.dir}; }
+  }else if(currentTool==="wall"){
+    toggleWallAtPoint(e.offsetX,e.offsetY);
+  }
+  draw(); 
+  initialWorld = deepCopy(world);
+  // Reset step counter when manually editing world
+  stepCount = 0;
+  updateStepCounter();
+});
+function canvasToCell(px,py){
+  const x = Math.floor((px - margin)/cellSize);
+  const y = Math.floor((py - margin)/cellSize);
+  if(x<0||y<0||x>=world.cols||y>=world.rows) return {x:-1,y:-1};
+  return {x,y};
+}
+function toggleWallAtPoint(px,py){
+  // determine the nearest edge inside the grid cell
+  const gx = (px - margin)/cellSize;
+  const gy = (py - margin)/cellSize;
+  const x = Math.floor(gx); const y = Math.floor(gy);
+  const dx = gx - x; const dy = gy - y;
+  const pad = 0.2;
+  if(dx<pad && x>0){ // left edge between (x-1,y) & (x,y)
+    world.vWalls[y][x-1] = !world.vWalls[y][x-1];
+  }else if(dx>1-pad && x<world.cols-1){ // right edge
+    world.vWalls[y][x] = !world.vWalls[y][x];
+  }else if(dy<pad && y>0){ // top edge
+    world.hWalls[y-1][x] = !world.hWalls[y-1][x];
+  }else if(dy>1-pad && y<world.rows-1){ // bottom edge
+    world.hWalls[y][x] = !world.hWalls[y][x];
+  }
+}
+
+/* Save/Load JSON */
+$("#saveWorld").onclick = ()=>{
+  const data = new Blob([JSON.stringify(initialWorld,null,2)],{type:"application/json"});
+  const url = URL.createObjectURL(data);
+  const a = document.createElement('a');
+  a.href=url; a.download='karel_world.json'; a.click();
+  URL.revokeObjectURL(url);
+};
+$("#loadWorld").onclick = ()=>{
+  const input = document.createElement('input');
+  input.type="file"; input.accept="application/json";
+  input.onchange = ()=>{
+    const file = input.files[0]; if(!file) return;
+    const fr = new FileReader();
+    fr.onload = ()=>{
+      try{
+        const obj = JSON.parse(fr.result);
+        if(obj.cols&&obj.rows&&obj.balls&&obj.vWalls&&obj.hWalls&&obj.karel){
+          gridCols=obj.cols; gridRows=obj.rows; initialWorld = obj; world=deepCopy(initialWorld);
+          // Reset step counter and clear frames when loading world
+          stepCount = 0;
+          frames = [];
+          updateStepCounter();
+          draw();
+          setStatus("World loaded - Ready");
+        }else alert("Invalid world file.");
+      }catch(e){ alert("Failed to load: "+e.message); }
+    };
+    fr.readAsText(file);
+  };
+  input.click();
+};
+
+/* ===================== Controls ===================== */
+$("#run").onclick = runUserCode;
+$("#step").onclick = ()=>{
+  if (!playing && frames.length === 0) {
+    // If not playing and no frames, run the code first to generate frames
+    runUserCode();
+    // Wait a bit for frames to be generated, then step
+    setTimeout(() => {
+      if (frames.length > 0) {
+        stepping = true;
+        paused = false;
+        playFrames();
+      }
+    }, 100);
+  } else if (playing && paused) {
+    // If already playing but paused, take one step
+    stepping = true;
+    paused = false;
+    playFrames();
+  } else if (!playing && frames.length > 0) {
+    // If not playing but have frames, start stepping
+    stepping = true;
+    paused = false;
+    playFrames();
+  }
+};
+$("#pause").onclick = ()=>{ paused = !paused; setStatus(paused?"Paused":"Running…"); };
+$("#reset").onclick = ()=>{ 
+  resetToInitial(); 
+  // Also clear the code editor to ensure clean start
+  $("#code").value = "";
+  setStarterCode();
+  // Force reset step counter and clear all execution state
+  stepCount = 0;
+  frames = [];
+  playing = false;
+  paused = false;
+  stepping = false;
+  updateStepCounter();
+  setStatus("Reset - Ready");
+};
+$("#clearWalls").onclick = ()=>{ 
+  // Clear all walls
+  for(let y = 0; y < world.rows; y++) {
+    for(let x = 0; x < world.cols - 1; x++) {
+      world.vWalls[y][x] = false;
+    }
+  }
+  for(let y = 0; y < world.rows - 1; y++) {
+    for(let x = 0; x < world.cols; x++) {
+      world.hWalls[y][x] = false;
+    }
+  }
+  initialWorld = deepCopy(world);
+  draw();
+  console.log("All walls cleared!");
+};
+
+$("#debugWorld").onclick = ()=>{ 
+  debugWorld();
+  console.log("Check console for world state details");
+};
+window.addEventListener('resize', draw);
+
+/* ===================== Tab Functionality ===================== */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    // Remove active class from all tabs and content
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    
+    // Add active class to clicked tab
+    btn.classList.add('active');
+    
+    // Show corresponding content
+    const tabName = btn.getAttribute('data-tab');
+    document.getElementById(tabName + '-tab').classList.add('active');
+  });
+});
+
+/* ===================== Simple Code Editor ===================== */
+const codeTextarea = $("#code");
+
+// Simple code editor - no line numbers or character count
+function updateCodeEditor() {
+  // Function kept for compatibility but does nothing
+}
+
+
+
+// Simple textarea - no special event handling needed
+
+
+
+/* ===================== Boot ===================== */
+function setStarterCode(){
+  const starter = `// Welcome! Write JavaScript using the Karel API.
+// Write your code here:
+
+// Example: Navigate to the target (blue circle with '1')
+// Since there are no balls, we need a different goal
+
+// Option 1: Simple navigation to target
+while (front_is_clear()) {
+  move();
+}
+turn_left();
+while (front_is_clear()) {
+  move();
+}
+
+// Option 2: If you want to add balls first, use World Builder
+// Click "Ball" tool and place some balls, then use:
+/*
+while (balls_present()) {
+  take_ball();
+  move();
+  put_ball();
+}
+*/
+`;
+  $("#code").value = starter;
+}
+
+// Debug function to check world state
+function debugWorld() {
+  console.log("World state:", {
+    cols: world.cols,
+    rows: world.rows,
+    karel: world.karel,
+    vWalls: world.vWalls,
+    hWalls: world.hWalls
+  });
+}
+
+
+
+
+
+
+initialWorld = presetWorld(gridCols,gridRows,"blank");
+world = deepCopy(initialWorld);
+snapshot(); draw(); setStarterCode();
+
+// PWA Service Worker Registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('SW registered: ', registration);
+      })
+      .catch((registrationError) => {
+        console.log('SW registration failed: ', registrationError);
+      });
+  });
+}
+
+// PWA Install Prompt
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  
+  // Show install button if not already installed
+  const installBtn = document.createElement('button');
+  installBtn.className = 'btn ok';
+  installBtn.innerHTML = '📱 Install App';
+  installBtn.onclick = () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the install prompt');
+        } else {
+          console.log('User dismissed the install prompt');
+        }
+        deferredPrompt = null;
+      });
+    }
+  };
+  
+  // Add install button to header
+  const header = document.querySelector('header');
+  header.appendChild(installBtn);
+});
+</script>
+</body>
+</html>

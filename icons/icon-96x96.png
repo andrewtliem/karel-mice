@@ -1,0 +1,36 @@
+# Icon Generation Instructions
+
+This is a placeholder file. You need to generate actual PNG icons for your PWA.
+
+## Option 1: Use Online Icon Generators
+1. Go to https://realfavicongenerator.net/
+2. Upload a high-resolution image (at least 512x512)
+3. Download the generated icon package
+4. Replace these placeholder files with the actual PNG icons
+
+## Option 2: Use Figma/Design Tools
+1. Create a 512x512 design in Figma
+2. Export as PNG in these sizes:
+   - 72x72, 96x96, 128x128, 144x144
+   - 152x152, 192x192, 384x384, 512x512
+
+## Option 3: Use AI Image Generators
+1. Use tools like DALL-E, Midjourney, or Stable Diffusion
+2. Prompt: "Simple, modern app icon for programming education, blue gradient, clean design"
+3. Generate and resize to required dimensions
+
+## Required Icon Sizes:
+- icon-72x72.png
+- icon-96x96.png  
+- icon-128x128.png
+- icon-144x144.png
+- icon-152x152.png
+- icon-192x192.png
+- icon-384x384.png
+- icon-512x512.png
+
+## Icon Design Tips:
+- Use your app's theme colors (#06b6d4, #3b82f6)
+- Keep it simple and recognizable
+- Ensure it looks good at small sizes
+- Use high contrast for visibility
