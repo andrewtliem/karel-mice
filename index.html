@@ -523,8 +523,9 @@
         <label for="tool_view">👁 View</label>
       </div>
       <div class="speed"><span class="badge">⚡ Speed</span><input id="speed" type="range" min="1" max="100" value="55"></div>
-      <button class="btn ghost" id="saveWorld">💾 Save</button>
-      <button class="btn ghost" id="loadWorld">📁 Load</button>
+              <button class="btn ghost" id="saveWorld" title="Save world layout and code together">💾 Save Project</button>
+        <button class="btn ghost" id="loadWorld" title="Load world layout and code together">📁 Load Project</button>
+        <button class="btn ghost" id="exportWorld" title="Export only the world layout (without code)">🌍 Export World</button>
     </div>
   </header>
 
@@ -1238,11 +1239,21 @@ function toggleWallAtPoint(px,py){
 
 /* Save/Load JSON */
 $("#saveWorld").onclick = ()=>{
-  const data = new Blob([JSON.stringify(initialWorld,null,2)],{type:"application/json"});
+  // Create a complete save object including world state and code
+  const saveData = {
+    world: initialWorld,
+    code: $("#code").value,
+    timestamp: new Date().toISOString(),
+    version: "1.0"
+  };
+  
+  const data = new Blob([JSON.stringify(saveData,null,2)],{type:"application/json"});
   const url = URL.createObjectURL(data);
   const a = document.createElement('a');
-  a.href=url; a.download='karel_world.json'; a.click();
+  a.href=url; a.download='karel_project.json'; a.click();
   URL.revokeObjectURL(url);
+  
+  setStatus("Project saved successfully!");
 };
 $("#loadWorld").onclick = ()=>{
   const input = document.createElement('input');
@@ -1253,20 +1264,62 @@ $("#loadWorld").onclick = ()=>{
     fr.onload = ()=>{
       try{
         const obj = JSON.parse(fr.result);
-        if(obj.cols&&obj.rows&&obj.balls&&obj.vWalls&&obj.hWalls&&obj.karel){
-          gridCols=obj.cols; gridRows=obj.rows; initialWorld = obj; world=deepCopy(initialWorld);
+        
+        // Check if this is a new format (with code) or old format (world only)
+        if(obj.world && obj.code !== undefined){
+          // New format: complete project with code
+          if(obj.world.cols && obj.world.rows && obj.world.balls && obj.world.vWalls && obj.world.hWalls && obj.world.karel){
+            gridCols = obj.world.cols; 
+            gridRows = obj.world.rows; 
+            initialWorld = obj.world; 
+            world = deepCopy(initialWorld);
+            
+            // Load the saved code
+            $("#code").value = obj.code;
+            
+            // Reset step counter and clear frames when loading world
+            stepCount = 0;
+            frames = [];
+            updateStepCounter();
+            draw();
+            setStatus(`Project loaded - ${obj.timestamp ? 'Saved: ' + new Date(obj.timestamp).toLocaleString() : 'Ready'}`);
+          }else{
+            alert("Invalid world data in project file.");
+          }
+        }else if(obj.cols && obj.rows && obj.balls && obj.vWalls && obj.hWalls && obj.karel){
+          // Old format: world only (backward compatibility)
+          gridCols = obj.cols; 
+          gridRows = obj.rows; 
+          initialWorld = obj; 
+          world = deepCopy(initialWorld);
+          
           // Reset step counter and clear frames when loading world
           stepCount = 0;
           frames = [];
           updateStepCounter();
           draw();
-          setStatus("World loaded - Ready");
-        }else alert("Invalid world file.");
-      }catch(e){ alert("Failed to load: "+e.message); }
+          setStatus("World loaded (old format) - Ready");
+        }else{
+          alert("Invalid project file format.");
+        }
+      }catch(e){ 
+        alert("Failed to load: " + e.message); 
+      }
     };
     fr.readAsText(file);
   };
   input.click();
+};
+
+// Export only the world layout (without code)
+$("#exportWorld").onclick = ()=>{
+  const data = new Blob([JSON.stringify(initialWorld,null,2)],{type:"application/json"});
+  const url = URL.createObjectURL(data);
+  const a = document.createElement('a');
+  a.href=url; a.download='karel_world.json'; a.click();
+  URL.revokeObjectURL(url);
+  
+  setStatus("World layout exported!");
 };
 
 /* ===================== Controls ===================== */
