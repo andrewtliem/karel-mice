@@ -881,10 +881,7 @@ function draw(){
   // karel
   drawKarel(karel.x,karel.y,karel.dir);
   
-  // Draw direction indicator when Karel tool is selected
-  if(currentTool === "karel") {
-    drawDirectionIndicator();
-  }
+
 }
 
 function drawKarel(x,y,dir){
@@ -972,56 +969,7 @@ function drawKarel(x,y,dir){
   ctx.restore();
 }
 
-// Draw direction indicator when Karel tool is selected
-function drawDirectionIndicator(){
-  const directions = ["N", "E", "S", "W"];
-  const currentDir = world.karel.dir;
-  
-  // Draw direction indicator in top-right corner
-  const indicatorSize = 60;
-  const x = canvas.width - indicatorSize - 20;
-  const y = 20;
-  
-  ctx.save();
-  
-  // Background
-  ctx.fillStyle = "rgba(6, 182, 212, 0.9)";
-  ctx.strokeStyle = "#ffffff";
-  ctx.lineWidth = 2;
-  ctx.roundRect(x, y, indicatorSize, indicatorSize, 8);
-  ctx.fill();
-  ctx.stroke();
-  
-  // Title
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "bold 12px ui-monospace";
-  ctx.textAlign = "center";
-  ctx.fillText("Direction", x + indicatorSize/2, y + 18);
-  
-  // Current direction
-  ctx.font = "bold 20px ui-monospace";
-  ctx.fillStyle = "#ffffff";
-  ctx.fillText(currentDir, x + indicatorSize/2, y + 45);
-  
-  // Direction arrow
-  const arrowSize = 20;
-  const arrowX = x + indicatorSize/2;
-  const arrowY = y + indicatorSize/2 + 10;
-  
-  ctx.translate(arrowX, arrowY);
-  const angle = {E:0, N:-Math.PI/2, W:Math.PI, S:Math.PI/2}[currentDir];
-  ctx.rotate(angle);
-  
-  ctx.fillStyle = "#ffffff";
-  ctx.beginPath();
-  ctx.moveTo(0, -arrowSize/2);
-  ctx.lineTo(arrowSize/2, arrowSize/2);
-  ctx.lineTo(-arrowSize/2, arrowSize/2);
-  ctx.closePath();
-  ctx.fill();
-  
-  ctx.restore();
-}
+
 
 /* ===================== World Helpers ===================== */
 function inBounds(x,y){return x>=0 && x<world.cols && y>=0 && y<world.rows;}

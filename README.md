@@ -9,7 +9,6 @@ An interactive Karel programming playground for learning algorithms and programm
 - **World Builder**: Create custom mazes and worlds
 - **Step-by-step Execution**: Debug your code with step-by-step animation
 - **Smart Karel Tool**: Click to place, double-click to rotate, right-click to rotate
-- **Visual Direction Indicator**: See Karel's current direction when editing
 - **Save/Load Projects**: Save both world layout and code together
 - **Offline Support**: Works without internet connection
 - **Installable**: Add to home screen like a native app
