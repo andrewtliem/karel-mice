@@ -8,6 +8,9 @@ An interactive Karel programming playground for learning algorithms and programm
 - **Real-time Code Execution**: Write JavaScript code and see Karel move in real-time
 - **World Builder**: Create custom mazes and worlds
 - **Step-by-step Execution**: Debug your code with step-by-step animation
+- **Smart Karel Tool**: Click to place, double-click to rotate, right-click to rotate
+- **Visual Direction Indicator**: See Karel's current direction when editing
+- **Save/Load Projects**: Save both world layout and code together
 - **Offline Support**: Works without internet connection
 - **Installable**: Add to home screen like a native app
 - **Responsive Design**: Works on desktop, tablet, and mobile
@@ -76,6 +79,7 @@ while (balls_present()) {
 1. Click "World Builder" button
 2. Choose grid size and preset
 3. Use tools to place balls, walls, and Karel
+   - **Karel Tool**: Click to place/move Karel, double-click to rotate direction, right-click to rotate
 4. Save your world for later use
 
 ## 🛠️ Development

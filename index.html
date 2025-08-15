@@ -880,6 +880,11 @@ function draw(){
 
   // karel
   drawKarel(karel.x,karel.y,karel.dir);
+  
+  // Draw direction indicator when Karel tool is selected
+  if(currentTool === "karel") {
+    drawDirectionIndicator();
+  }
 }
 
 function drawKarel(x,y,dir){
@@ -964,6 +969,57 @@ function drawKarel(x,y,dir){
   ctx.closePath();
   ctx.fill();
 
+  ctx.restore();
+}
+
+// Draw direction indicator when Karel tool is selected
+function drawDirectionIndicator(){
+  const directions = ["N", "E", "S", "W"];
+  const currentDir = world.karel.dir;
+  
+  // Draw direction indicator in top-right corner
+  const indicatorSize = 60;
+  const x = canvas.width - indicatorSize - 20;
+  const y = 20;
+  
+  ctx.save();
+  
+  // Background
+  ctx.fillStyle = "rgba(6, 182, 212, 0.9)";
+  ctx.strokeStyle = "#ffffff";
+  ctx.lineWidth = 2;
+  ctx.roundRect(x, y, indicatorSize, indicatorSize, 8);
+  ctx.fill();
+  ctx.stroke();
+  
+  // Title
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 12px ui-monospace";
+  ctx.textAlign = "center";
+  ctx.fillText("Direction", x + indicatorSize/2, y + 18);
+  
+  // Current direction
+  ctx.font = "bold 20px ui-monospace";
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText(currentDir, x + indicatorSize/2, y + 45);
+  
+  // Direction arrow
+  const arrowSize = 20;
+  const arrowX = x + indicatorSize/2;
+  const arrowY = y + indicatorSize/2 + 10;
+  
+  ctx.translate(arrowX, arrowY);
+  const angle = {E:0, N:-Math.PI/2, W:Math.PI, S:Math.PI/2}[currentDir];
+  ctx.rotate(angle);
+  
+  ctx.fillStyle = "#ffffff";
+  ctx.beginPath();
+  ctx.moveTo(0, -arrowSize/2);
+  ctx.lineTo(arrowSize/2, arrowSize/2);
+  ctx.lineTo(-arrowSize/2, arrowSize/2);
+  ctx.closePath();
+  ctx.fill();
+  
   ctx.restore();
 }
 
@@ -1190,23 +1246,55 @@ document.querySelectorAll('#toolSeg input').forEach(r=>{
 });
 function updateToolHint(){
   const names={ball:"Ball",remove:"Remove",wall:"Wall",karel:"Karel",view:"View"};
-  $("#toolHint").textContent = "Tool: "+names[currentTool];
+  let hint = "Tool: " + names[currentTool];
+  
+  // Add special hints for Karel tool
+  if(currentTool === "karel") {
+    hint += " - Click to place, double-click to rotate, right-click to rotate";
+  }
+  
+  $("#toolHint").textContent = hint;
 }
 canvas.addEventListener('contextmenu', e=>{ if(currentTool==="karel") e.preventDefault(); });
+
+// Track double-click timing for Karel direction change
+let lastKarelClick = 0;
+let karelClickCount = 0;
 
 canvas.addEventListener('mousedown', e=>{
   const {x,y} = canvasToCell(e.offsetX,e.offsetY);
   if(x===-1) return;
+  
   if(currentTool==="ball"){
     world.balls[y][x] = (world.balls[y][x]+1) % 10;
   }else if(currentTool==="remove"){
     world.balls[y][x] = Math.max(0, world.balls[y][x] - 1);
   }else if(currentTool==="karel"){
-    if(e.button===2){ world.karel.dir = rightOf(world.karel.dir); }
-    else{ world.karel = {x,y,dir:world.karel.dir}; }
+    if(e.button===2){ 
+      // Right-click: rotate Karel
+      world.karel.dir = rightOf(world.karel.dir); 
+    }else{ 
+      // Left-click: place or move Karel
+      const now = Date.now();
+      if(now - lastKarelClick < 300 && x === world.karel.x && y === world.karel.y) {
+        // Double-click on Karel: rotate direction
+        karelClickCount++;
+        if(karelClickCount >= 2) {
+          world.karel.dir = rightOf(world.karel.dir);
+          karelClickCount = 0;
+          setStatus("Karel rotated! Direction: " + world.karel.dir);
+        }
+      } else {
+        // Single click: place/move Karel
+        karelClickCount = 1;
+        world.karel = {x,y,dir:world.karel.dir}; 
+      }
+      lastKarelClick = now;
+    }
   }else if(currentTool==="wall"){
     toggleWallAtPoint(e.offsetX,e.offsetY);
   }
+  
   draw(); 
   initialWorld = deepCopy(world);
   // Reset step counter when manually editing world
