@@ -10,11 +10,28 @@ Access the live interactive application on GitHub Pages:
 
 ---
 
+## 🎯 Built-in Challenges & Verified Solutions
+
+Karel Studio dilengkapi dengan 5 tantangan interaktif berjenjang yang memiliki tombol **"💡 Muat Solusi (Load Solution)"** dan **"✏️ Reset Soal"** langsung di antarmuka:
+
+1. **🪜 Tantangan 1: Naik Tangga & Tanam Bendera (*Dekomposisi*)**
+   * *Misi:* Pecah masalah menaiki tangga menjadi sub-fungsi modular `step_up()` dan `turn_right()`, lalu taruh bola bendera di puncak tertinggi.
+2. **🎾 Tantangan 2: Panen Semua Bola (*Pengenalan Pola & Looping*)**
+   * *Misi:* Menelusuri seluruh baris jalan dan mengambil semua bola yang terserak menggunakan `while (front_is_clear())` dan `if (balls_present())`.
+3. **🧱 Tantangan 3: Lompat Rintangan Tembok (*Kondisional Adaptif*)**
+   * *Misi:* Melompati dinding-dinding penghalang yang bervariasi ketinggiannya menggunakan sensor `!right_is_clear()` sampai ke garis finish.
+4. **🌀 Tantangan 4: Escape the Maze (*Algoritma Wall Follower*)**
+   * *Misi:* Menerapkan algoritma navigasi klasik *Right-Hand Rule* untuk mencari jalan keluar dari labirin berliku secara otomatis.
+5. **🎨 Tantangan 5: Pola Papan Catur (*Nested Patterns*)**
+   * *Misi:* Menanam bola berselang-seling (1, 0, 1, 0...) untuk membentuk pola papan catur (*checkerboard*).
+
+---
+
 ## 🧩 Computational Thinking dengan Karel Playground
 
 | Pilar CT | Penerapan Praktis di Karel Playground |
 | :--- | :--- |
-| **1. Decomposition** | Mahasiswa memecah tugas besar (misal: *Menyelesaikan Labirin*) menjadi sub-fungsi modular:<br>• `function turn_right() { turn_left(); turn_left(); turn_left(); }`<br>• `function solve_step() { ... }` |
+| **1. Decomposition** | Mahasiswa memecah tugas besar (misal: *Menyelesaikan Labirin*) menjadi sub-fungsi modular:<br>• `function turn_right() { turn_left(); turn_left(); turn_left(); }`<br>• `function step_up() { turn_left(); move(); turn_right(); move(); }` |
 | **2. Pattern Recognition** | Mahasiswa melihat pola labirin berulang dan menyusun perulangan (*loop*):<br>• *"Selama depan kosong, maju terus"* &rarr; `while (front_is_clear()) { move(); }` |
 | **3. Abstraction** | Mahasiswa menggunakan sensor kondisi tingkat tinggi (`front_is_clear()`, `balls_present()`) tanpa perlu memikirkan perhitungan koordinat piksel layar yang rumit. |
 | **4. Algorithm Thinking** | Mahasiswa merancang algoritma navigasi sederhana seperti **Wall Follower (Aturan Tangan Kanan/Kiri)** untuk keluar dari labirin. |
@@ -23,6 +40,7 @@ Access the live interactive application on GitHub Pages:
 
 ## ✨ Features
 
+- **Built-in Challenges & Solutions**: 5 level tantangan terintegrasi dengan kode solusi siap pakai
 - **Interactive Karel Robot**: Visual programming with a cute dog/cat/mouse robot
 - **Real-time Code Execution**: Write JavaScript code and see Karel move in real-time
 - **World Builder**: Create custom mazes and worlds
@@ -31,7 +49,7 @@ Access the live interactive application on GitHub Pages:
 - **Save/Load Projects**: Save both world layout and code together
 - **Offline Support**: Works without internet connection
 - **Installable**: Add to home screen like a native app
-- **Responsive Design**: Works on desktop, tablet, and mobile
+- **Modern Light Theme**: Clean, responsive design for desktop, tablet, and mobile
 
 ---
 
@@ -87,6 +105,8 @@ Visit the live demo:
 ```javascript
 move();           // Move forward one step
 turn_left();      // Turn 90° left
+turn_right();     // Turn 90° right
+turn_around();    // Turn 180° around
 put_ball();       // Place a ball
 take_ball();      // Pick up a ball
 ```
@@ -128,7 +148,7 @@ while (balls_present()) {
 - **Frontend**: HTML5, CSS3, JavaScript (ES6+)
 - **Graphics**: HTML5 Canvas API
 - **PWA**: Service Workers, Web App Manifest
-- **Styling**: CSS Grid, Flexbox, CSS Variables
+- **Styling**: Modern CSS Grid, Flexbox, CSS Variables
 
 ---
 

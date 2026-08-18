@@ -8,7 +8,7 @@
 <!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <!-- PWA Meta Tags -->
 <meta name="description" content="Interactive Karel programming playground for learning algorithms and computational thinking concepts">
@@ -34,7 +34,6 @@
     --bg-main: #f8fafc;
     --bg-surface: #ffffff;
     --bg-surface-hover: #f1f5f9;
-    --bg-card: #ffffff;
     --border-color: #e2e8f0;
     --border-hover: #cbd5e1;
     --border-focus: #4f46e5;
@@ -89,75 +88,97 @@
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border-color);
-    padding: 0.75rem 1.5rem;
+    padding: 0.65rem 1.25rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
+    gap: 0.75rem;
     z-index: 50;
     flex-shrink: 0;
     box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+    flex-wrap: wrap;
   }
 
   .brand-group {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.65rem;
   }
 
   .brand-logo {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     color: white;
     box-shadow: 0 4px 10px var(--primary-glow);
   }
 
   .brand-title {
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     font-weight: 800;
     letter-spacing: -0.02em;
     color: var(--text-main);
   }
 
-  .brand-badge {
+  /* Challenge Selector in Navbar */
+  .challenge-picker-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     background: var(--primary-light);
     border: 1px solid #c7d2fe;
-    color: var(--primary);
-    font-size: 0.7rem;
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+  }
+
+  .challenge-picker-wrap label {
+    font-size: 0.78rem;
     font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 999px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .challenge-select {
+    background: #ffffff;
+    border: 1px solid #c7d2fe;
+    color: var(--text-main);
+    padding: 0.35rem 0.65rem;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
   }
 
   .nav-actions {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.4rem;
     flex-wrap: wrap;
   }
 
-  /* ================= BUTTONS & INPUTS ================= */
+  /* ================= BUTTONS ================= */
   .btn {
     border: 1px solid var(--border-color);
     background: var(--bg-surface);
     color: var(--text-main);
-    padding: 0.5rem 0.95rem;
+    padding: 0.45rem 0.85rem;
     border-radius: var(--radius-sm);
     font-family: inherit;
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     transition: all 0.2s ease;
     user-select: none;
     box-shadow: var(--shadow-sm);
@@ -172,11 +193,16 @@
 
   .btn:active { transform: translateY(0); }
 
+  .btn-sm {
+    padding: 0.3rem 0.65rem;
+    font-size: 0.75rem;
+  }
+
   .btn-primary {
     background: var(--primary);
     border-color: var(--primary);
     color: white;
-    box-shadow: 0 4px 12px var(--primary-glow);
+    box-shadow: 0 3px 10px var(--primary-glow);
   }
   .btn-primary:hover {
     background: var(--primary-hover);
@@ -187,7 +213,7 @@
     background: var(--success);
     border-color: var(--success);
     color: white;
-    box-shadow: 0 4px 12px var(--success-glow);
+    box-shadow: 0 3px 10px var(--success-glow);
   }
   .btn-success:hover {
     background: #059669;
@@ -230,9 +256,9 @@
   .tool-seg input[type="radio"] { display: none; }
   
   .tool-seg label {
-    padding: 0.45rem 0.8rem;
+    padding: 0.4rem 0.75rem;
     border-radius: 8px;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 600;
     color: var(--text-muted);
     cursor: pointer;
@@ -257,26 +283,26 @@
   .speed-control {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     background: var(--bg-surface);
-    padding: 4px 10px;
+    padding: 4px 8px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-color);
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: var(--text-muted);
   }
 
   .speed-control input[type="range"] {
     accent-color: var(--primary);
-    width: 90px;
+    width: 80px;
     cursor: pointer;
   }
 
   /* ================= MAIN SPLIT WORKSPACE ================= */
   main {
     display: grid;
-    grid-template-columns: minmax(380px, 48%) minmax(420px, 52%);
+    grid-template-columns: minmax(400px, 48%) minmax(420px, 52%);
     flex: 1;
     overflow: hidden;
   }
@@ -307,7 +333,7 @@
   }
 
   .tab-btn {
-    padding: 0.75rem 1.1rem;
+    padding: 0.7rem 1rem;
     background: transparent;
     border: none;
     border-bottom: 2px solid transparent;
@@ -343,15 +369,63 @@
 
   .tab-content.active { display: flex; }
 
+  /* Challenge Mission Banner Card */
+  .challenge-banner {
+    background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+    border-bottom: 1px solid #e0e7ff;
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .challenge-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    flex: 1;
+  }
+
+  .challenge-badge {
+    background: var(--primary);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+
+  .challenge-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 2px;
+  }
+
+  .challenge-desc {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    line-height: 1.35;
+  }
+
+  .challenge-actions {
+    display: flex;
+    gap: 6px;
+  }
+
   /* Code IDE Box */
   .ide-topbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 1.25rem;
+    padding: 0.4rem 1.25rem;
     background: #f8fafc;
     border-bottom: 1px solid var(--border-color);
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     color: var(--text-subtle);
   }
 
@@ -370,7 +444,7 @@
     color: #0f172a;
     border: none;
     outline: none;
-    padding: 1.25rem 1.25rem 2rem 1.25rem;
+    padding: 1rem 1.25rem 2rem 1.25rem;
     font-family: 'Fira Code', monospace;
     font-size: 0.88rem;
     line-height: 1.7;
@@ -384,10 +458,10 @@
   }
 
   .hintbar {
-    padding: 0.65rem 1.25rem;
+    padding: 0.6rem 1.25rem;
     background: #f8fafc;
     border-top: 1px solid var(--border-color);
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     color: var(--text-muted);
     display: flex;
     align-items: center;
@@ -400,7 +474,7 @@
     border: 1px solid var(--border-color);
     color: var(--primary);
     font-family: 'Fira Code', monospace;
-    font-size: 0.75rem;
+    font-size: 0.74rem;
     font-weight: 600;
     padding: 2px 6px;
     border-radius: 4px;
@@ -512,7 +586,7 @@
   .execution-dock {
     background: #ffffff;
     border-top: 1px solid var(--border-color);
-    padding: 0.85rem 1.25rem;
+    padding: 0.75rem 1.25rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -619,11 +693,21 @@
     <div class="brand-group">
       <div class="brand-logo">🐭</div>
       <div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <h1 class="brand-title">Karel Studio</h1>
-          <span class="brand-badge">PWA Ready</span>
-        </div>
+        <h1 class="brand-title">Karel Studio</h1>
       </div>
+    </div>
+
+    <!-- Challenges & Worlds Dropdown -->
+    <div class="challenge-picker-wrap">
+      <label for="challengeSelect">🎯 Tantangan:</label>
+      <select id="challengeSelect" class="challenge-select" onchange="selectChallenge(this.value)">
+        <option value="stairs" selected>1. 🪜 Naik Tangga (Dekomposisi)</option>
+        <option value="harvest">2. 🎾 Panen Semua Bola (Pola & Loop)</option>
+        <option value="hurdles">3. 🧱 Lompat Rintangan Tembok (Kondisi)</option>
+        <option value="maze">4. 🌀 Escape the Maze (Wall Follower)</option>
+        <option value="checkerboard">5. 🎨 Pola Papan Catur (Nested Loops)</option>
+        <option value="sandbox">0. 🛠️ Mode Bebas / Sandbox</option>
+      </select>
     </div>
 
     <!-- Center Tool Palette -->
@@ -669,11 +753,25 @@
 
       <!-- Tab 1: Code Editor -->
       <div class="tab-content active" id="code-tab">
+        <!-- Challenge Mission Banner Card -->
+        <div class="challenge-banner" id="challengeBanner">
+          <div class="challenge-info">
+            <span class="challenge-badge" id="chBadge">Level 1</span>
+            <div>
+              <h3 class="challenge-title" id="chTitle">🪜 Naik Tangga & Tanam Bendera</h3>
+              <p class="challenge-desc" id="chDesc">Bantu Karel menaiki 4 anak tangga sampai puncak dan taruh bola bendera menggunakan sub-fungsi.</p>
+            </div>
+          </div>
+          <div class="challenge-actions">
+            <button class="btn btn-primary btn-sm" onclick="loadChallengeSolution()" title="Lihat dan jalankan kode solusi">💡 Muat Solusi</button>
+            <button class="btn btn-ghost btn-sm" onclick="resetChallengeCode()" title="Mulai kode dari awal">✏️ Reset Soal</button>
+          </div>
+        </div>
+
         <div class="ide-topbar">
           <span class="file-name-indicator">📄 <code>main_karel.js</code></span>
           <div style="display: flex; gap: 6px;">
             <button class="btn btn-ghost" style="padding: 2px 8px; font-size: 0.72rem;" onclick="copyEditorCode()">📋 Copy</button>
-            <button class="btn btn-ghost" style="padding: 2px 8px; font-size: 0.72rem;" onclick="setStarterCode()">✨ Reset</button>
           </div>
         </div>
         <textarea id="code" class="code-textarea" spellcheck="false" placeholder="// Tulis kode Karel JavaScript Anda di sini..."></textarea>
@@ -681,6 +779,7 @@
           <strong>💡 API Singkat:</strong>
           <span class="code-token">move()</span>
           <span class="code-token">turn_left()</span>
+          <span class="code-token">turn_right()</span>
           <span class="code-token">put_ball()</span>
           <span class="code-token">take_ball()</span>
           <span class="code-token">front_is_clear()</span>
@@ -702,12 +801,13 @@
                 <span class="ct-tag tag-purple">1. Dekomposisi</span>
                 <span>Memecah Masalah Kompleks</span>
               </div>
-              <p>Pecah misi labirin besar menjadi fungsi-fungsi kecil yang modular dan mudah dikelola:</p>
+              <p>Pecah misi besar menjadi fungsi-fungsi kecil yang modular (Contoh: Tantangan #1 Naik Tangga):</p>
               <div class="ct-code-box">
 function turn_right() {<br>
-&nbsp;&nbsp;turn_left();<br>
-&nbsp;&nbsp;turn_left();<br>
-&nbsp;&nbsp;turn_left();<br>
+&nbsp;&nbsp;turn_left(); turn_left(); turn_left();<br>
+}<br>
+function step_up() {<br>
+&nbsp;&nbsp;turn_left(); move(); turn_right(); move();<br>
 }
               </div>
             </div>
@@ -717,13 +817,11 @@ function turn_right() {<br>
                 <span class="ct-tag tag-amber">2. Pengenalan Pola</span>
                 <span>Mendeteksi Keteraturan & Looping</span>
               </div>
-              <p>Kenali pola berulang saat menyusuri lorong atau mengumpulkan bola:</p>
+              <p>Kenali pola berulang saat menyusuri lorong atau mengumpulkan bola (Tantangan #2):</p>
               <div class="ct-code-box">
 while (front_is_clear()) {<br>
+&nbsp;&nbsp;if (balls_present()) { take_ball(); }<br>
 &nbsp;&nbsp;move();<br>
-&nbsp;&nbsp;if (balls_present()) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;take_ball();<br>
-&nbsp;&nbsp;}<br>
 }
               </div>
             </div>
@@ -731,7 +829,7 @@ while (front_is_clear()) {<br>
             <div class="ct-card">
               <div class="ct-card-header">
                 <span class="ct-tag tag-blue">3. Abstraksi</span>
-                <span>Fokus pada Logika Tingkat Tinggi</span>
+                <span>Fokus pada Logika Kondisi Sensor</span>
               </div>
               <p>Gunakan sensor kondisi Karel tanpa harus menghitung koordinat piksel layar:</p>
               <div class="ct-code-box">
@@ -748,14 +846,12 @@ if (front_is_clear()) {<br>
                 <span class="ct-tag tag-emerald">4. Berpikir Algoritma</span>
                 <span>Langkah Terstruktur (Wall Follower)</span>
               </div>
-              <p>Rancang algoritma navigasi untuk menyelesaikan labirin secara otomatis:</p>
+              <p>Rancang algoritma navigasi untuk menyelesaikan labirin otomatis (Tantangan #4):</p>
               <div class="ct-code-box">
-function solve_maze() {<br>
-&nbsp;&nbsp;while (no_balls_present()) {<br>
-&nbsp;&nbsp;&nbsp;&nbsp;if (right_is_clear()) { turn_right(); move(); }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;else if (front_is_clear()) { move(); }<br>
-&nbsp;&nbsp;&nbsp;&nbsp;else { turn_left(); }<br>
-&nbsp;&nbsp;}<br>
+while (no_balls_present()) {<br>
+&nbsp;&nbsp;if (right_is_clear()) { turn_right(); move(); }<br>
+&nbsp;&nbsp;else if (front_is_clear()) { move(); }<br>
+&nbsp;&nbsp;else { turn_left(); }<br>
 }
               </div>
             </div>
@@ -825,11 +921,11 @@ function solve_maze() {<br>
       <div class="grid-cfg">
         <div class="cfg-card">
           <label for="cols">📐 Columns (Lebar)</label>
-          <input id="cols" type="number" min="2" max="40" value="12">
+          <input id="cols" type="number" min="2" max="40" value="10">
         </div>
         <div class="cfg-card">
           <label for="rows">📏 Rows (Tinggi)</label>
-          <input id="rows" type="number" min="2" max="40" value="12">
+          <input id="rows" type="number" min="2" max="40" value="10">
         </div>
         <div class="cfg-card" style="grid-column: span 2;">
           <label for="preset">🎯 Pilihan Preset Labirin</label>
@@ -851,6 +947,318 @@ function solve_maze() {<br>
   </dialog>
 
 <script>
+/* ===================== Challenges & Solutions Dataset ===================== */
+const CHALLENGES = {
+  stairs: {
+    badge: "Tantangan 1",
+    title: "🪜 Naik Tangga & Tanam Bendera",
+    desc: "Bantu Karel menaiki 4 anak tangga sampai ke puncak dan taruh 1 bola bendera. Gunakan dekomposisi fungsi step_up()!",
+    cols: 8,
+    rows: 8,
+    setupWorld(w) {
+      w.karel = { x: 0, y: 7, dir: "E" };
+      // Stair walls
+      // Step 1
+      w.vWalls[7][0] = true; w.hWalls[6][1] = true;
+      // Step 2
+      w.vWalls[6][1] = true; w.hWalls[5][2] = true;
+      // Step 3
+      w.vWalls[5][2] = true; w.hWalls[4][3] = true;
+      // Step 4
+      w.vWalls[4][3] = true; w.hWalls[3][4] = true;
+    },
+    starterCode: `// Tantangan 1: Naik Tangga & Tanam Bendera
+// Pilar CT: Dekomposisi (Buat fungsi step_up dan turn_right)
+
+function turn_right() {
+  turn_left();
+  turn_left();
+  turn_left();
+}
+
+function step_up() {
+  // Tulis langkah menaiki 1 anak tangga di sini:
+  
+}
+
+// Naikkan Karel sebanyak 4 anak tangga, lalu put_ball() di puncak!
+`,
+    solutionCode: `// SOLUSI Tantangan 1: Naik Tangga & Tanam Bendera
+// Dekomposisi: Memecah tugas menjadi fungsi modular
+
+function turn_right() {
+  turn_left();
+  turn_left();
+  turn_left();
+}
+
+function step_up() {
+  turn_left();
+  move();
+  turn_right();
+  move();
+}
+
+// Ulangi 4 kali untuk naik ke puncak tangga
+for (let i = 0; i < 4; i++) {
+  step_up();
+}
+
+// Tanam bola bendera di puncak
+put_ball();
+`
+  },
+
+  harvest: {
+    badge: "Tantangan 2",
+    title: "🎾 Panen Semua Bola di Kebun",
+    desc: "Karel harus menyusuri seluruh baris jalan dan mengambil semua bola yang ada menggunakan while loop & kondisi!",
+    cols: 10,
+    rows: 6,
+    setupWorld(w) {
+      w.karel = { x: 0, y: 5, dir: "E" };
+      // Place scattered balls along bottom row
+      [1, 3, 4, 6, 7, 9].forEach(x => { w.balls[5][x] = 1; });
+    },
+    starterCode: `// Tantangan 2: Panen Semua Bola
+// Pilar CT: Pengenalan Pola & Looping
+
+// Gunakan while(front_is_clear()) dan if(balls_present())
+while (front_is_clear()) {
+  // Ambil bola jika ada di posisi ini:
+  
+  move();
+}
+`,
+    solutionCode: `// SOLUSI Tantangan 2: Panen Semua Bola
+// Pengenalan Pola: Setiap langkah mengecek keberadaan bola
+
+while (front_is_clear()) {
+  if (balls_present()) {
+    take_ball();
+  }
+  move();
+}
+
+// Cek posisi paling ujung setelah selesai jalan
+if (balls_present()) {
+  take_ball();
+}
+`
+  },
+
+  hurdles: {
+    badge: "Tantangan 3",
+    title: "🧱 Lompat Rintangan Tembok",
+    desc: "Karel mengikuti lomba lari rintangan. Lompati setiap tembok penghalang sampai menemukan bola finish di ujung!",
+    cols: 12,
+    rows: 6,
+    setupWorld(w) {
+      w.karel = { x: 0, y: 5, dir: "E" };
+      // Hurdle 1 at x=2, height 2
+      w.vWalls[5][2] = true; w.vWalls[4][2] = true;
+      // Hurdle 2 at x=6, height 3
+      w.vWalls[5][6] = true; w.vWalls[4][6] = true; w.vWalls[3][6] = true;
+      // Hurdle 3 at x=9, height 2
+      w.vWalls[5][9] = true; w.vWalls[4][9] = true;
+      // Finish ball at (11, 5)
+      w.balls[5][11] = 1;
+    },
+    starterCode: `// Tantangan 3: Lompat Rintangan Tembok
+// Pilar CT: Abstraksi & Kondisional Adaptif
+
+function turn_right() {
+  turn_left();
+  turn_left();
+  turn_left();
+}
+
+function jump_hurdle() {
+  // Buat fungsi melompati tembok setinggi apa pun:
+  
+}
+
+// Maju sampai menemukan bola finish di ujung
+while (no_balls_present()) {
+  if (!front_is_clear()) {
+    jump_hurdle();
+  } else {
+    move();
+  }
+}
+`,
+    solutionCode: `// SOLUSI Tantangan 3: Lompat Rintangan Tembok
+// Fungsi melompati tembok dengan ketinggian adaptif
+
+function turn_right() {
+  turn_left();
+  turn_left();
+  turn_left();
+}
+
+function jump_hurdle() {
+  turn_left();
+  // Naik sampai melewati pucuk tembok
+  while (!right_is_clear()) {
+    move();
+  }
+  turn_right();
+  move();
+  turn_right();
+  // Turun kembali ke dasar tanah
+  while (front_is_clear()) {
+    move();
+  }
+  turn_left();
+}
+
+// Bergerak sampai menemukan bola garis finish
+while (no_balls_present()) {
+  if (!front_is_clear()) {
+    jump_hurdle();
+  } else {
+    move();
+  }
+}
+`
+  },
+
+  maze: {
+    badge: "Tantangan 4",
+    title: "🌀 Escape the Maze (Wall Follower)",
+    desc: "Karel terjebak di dalam labirin berliku. Terapkan algoritma Wall Follower (Aturan Tangan Kanan) untuk menuju bola pintu keluar!",
+    cols: 10,
+    rows: 10,
+    setupWorld(w) {
+      w.karel = { x: 0, y: 9, dir: "E" };
+      // Create maze structure
+      for(let y=1; y<9; y+=2) for(let x=0; x<9; x++) w.vWalls[y][x] = true;
+      for(let x=1; x<9; x+=2) for(let y=0; y<9; y++) w.hWalls[y][x] = true;
+      // Opening passages
+      w.vWalls[1][4] = false; w.vWalls[3][7] = false; w.vWalls[5][2] = false; w.vWalls[7][6] = false;
+      w.hWalls[2][1] = false; w.hWalls[4][5] = false; w.hWalls[6][3] = false;
+      // Exit goal ball at (9, 0)
+      w.balls[0][9] = 1;
+    },
+    starterCode: `// Tantangan 4: Escape the Maze
+// Pilar CT: Perancangan Algoritma (Right-Hand Rule)
+
+function turn_right() {
+  turn_left();
+  turn_left();
+  turn_left();
+}
+
+// Algoritma Wall Follower (Tangan Kanan):
+// 1. Jika kanan kosong -> belok kanan & maju
+// 2. Jika tidak, jika depan kosong -> maju
+// 3. Jika tidak -> belok kiri
+while (no_balls_present()) {
+  // Lengkapi logika di sini:
+  
+}
+`,
+    solutionCode: `// SOLUSI Tantangan 4: Escape the Maze
+// Algoritma Klasik Wall Follower (Aturan Tangan Kanan)
+
+function turn_right() {
+  turn_left();
+  turn_left();
+  turn_left();
+}
+
+while (no_balls_present()) {
+  if (right_is_clear()) {
+    turn_right();
+    move();
+  } else if (front_is_clear()) {
+    move();
+  } else {
+    turn_left();
+  }
+}
+`
+  },
+
+  checkerboard: {
+    badge: "Tantangan 5",
+    title: "🎨 Pola Papan Catur (Checkerboard)",
+    desc: "Tanam bola secara berselang-seling (1, 0, 1, 0...) di sepanjang baris untuk membentuk pola papan catur!",
+    cols: 8,
+    rows: 8,
+    setupWorld(w) {
+      w.karel = { x: 0, y: 7, dir: "E" };
+    },
+    starterCode: `// Tantangan 5: Pola Papan Catur
+// Pilar CT: Pengenalan Pola & Struktur Bersarang
+
+function fill_row() {
+  put_ball();
+  while (front_is_clear()) {
+    move();
+    if (front_is_clear()) {
+      move();
+      put_ball();
+    }
+  }
+}
+
+fill_row();
+`,
+    solutionCode: `// SOLUSI Tantangan 5: Pola Papan Catur
+// Melakukan pengecekan lompat 2 langkah per penempatan bola
+
+function fill_row() {
+  put_ball();
+  while (front_is_clear()) {
+    move();
+    if (front_is_clear()) {
+      move();
+      put_ball();
+    }
+  }
+}
+
+fill_row();
+`
+  },
+
+  sandbox: {
+    badge: "Mode Bebas",
+    title: "🛠️ Mode Bebas / Sandbox",
+    desc: "Eksplorasi dan buat dunia serta program Karel Anda sendiri secara leluasa tanpa batasan aturan.",
+    cols: 10,
+    rows: 10,
+    setupWorld(w) {
+      w.karel = { x: 0, y: 9, dir: "E" };
+    },
+    starterCode: `// Selamat Datang di Mode Bebas Karel Studio!
+// Gunakan instruksi Karel untuk menyelesaikan ide Anda.
+
+while (front_is_clear()) {
+  move();
+}
+turn_left();
+while (front_is_clear()) {
+  move();
+}
+`,
+    solutionCode: `// Contoh Kode Eksplorasi
+while (front_is_clear()) {
+  put_ball();
+  move();
+}
+turn_left();
+while (front_is_clear()) {
+  put_ball();
+  move();
+}
+`
+  }
+};
+
+let currentChallengeKey = "stairs";
+
 /* ===================== State & Utils ===================== */
 const clamp = (n,a,b) => Math.max(a,Math.min(b,n));
 const deepCopy = obj => JSON.parse(JSON.stringify(obj));
@@ -861,7 +1269,7 @@ const $ = sel => document.querySelector(sel);
 let stepCount = 0;
 const canvas = $("#cv");
 const ctx = canvas.getContext("2d", {alpha: false});
-let gridCols = 12, gridRows = 12, cellSize = 48, margin = 24;
+let gridCols = 8, gridRows = 8, cellSize = 48, margin = 24;
 
 function resizeCanvasForGrid(){
   const maxSide = Math.min(750, Math.min(window.innerWidth - 420, window.innerHeight - 150));
@@ -890,17 +1298,64 @@ let playing = false, paused = false, stepping = false;
 let speedEl = $("#speed");
 let statusEl = $("#status");
 
+/* ===================== Challenges Handler ===================== */
+function selectChallenge(key) {
+  currentChallengeKey = key;
+  const ch = CHALLENGES[key];
+  if (!ch) return;
+
+  // Update Banner UI
+  $("#chBadge").textContent = ch.badge;
+  $("#chTitle").textContent = ch.title;
+  $("#chDesc").textContent = ch.desc;
+
+  // Update Grid dimensions
+  gridCols = ch.cols;
+  gridRows = ch.rows;
+  $("#cols").value = ch.cols;
+  $("#rows").value = ch.rows;
+
+  // Build World
+  initialWorld = makeWorld(ch.cols, ch.rows);
+  ch.setupWorld(initialWorld);
+  world = deepCopy(initialWorld);
+
+  // Set Code
+  $("#code").value = ch.starterCode;
+
+  // Redraw
+  resetToInitial();
+  setStatus("Tantangan dimuat: " + ch.title);
+}
+
+function loadChallengeSolution() {
+  const ch = CHALLENGES[currentChallengeKey];
+  if (ch) {
+    $("#code").value = ch.solutionCode;
+    setStatus("💡 Solusi dimuat! Klik ▶️ Run untuk menguji.");
+  }
+}
+
+function resetChallengeCode() {
+  const ch = CHALLENGES[currentChallengeKey];
+  if (ch) {
+    $("#code").value = ch.starterCode;
+    resetToInitial();
+    setStatus("Kode tantangan di-reset.");
+  }
+}
+
 /* ===================== Rendering ===================== */
 function draw(){
   resizeCanvasForGrid();
   const {cols, rows, balls, vWalls, hWalls, karel} = world;
   const W = canvas.width, H = canvas.height;
   
-  // Clean Crisp White Canvas Background
+  // Clean White Canvas Background
   ctx.fillStyle = "#ffffff"; 
   ctx.fillRect(0,0,W,H);
 
-  // Clean Grid Lines
+  // Grid Lines
   ctx.strokeStyle = "#e2e8f0";
   ctx.lineWidth = 1;
   for(let i=0; i<=cols; i++){
@@ -912,7 +1367,7 @@ function draw(){
     ctx.beginPath(); ctx.moveTo(margin, y); ctx.lineTo(margin+cols*cellSize, y); ctx.stroke();
   }
 
-  // Walls (Purple solid modern lines)
+  // Walls (Purple Solid Modern Lines)
   ctx.strokeStyle = "#7c3aed";
   ctx.lineWidth = 4;
   ctx.lineCap = "round";
@@ -1115,7 +1570,7 @@ function setStatus(t){
     statusEl.style.background = "var(--warning-light)";
     statusEl.style.color = "var(--warning)";
     statusEl.style.borderColor = "#fde68a";
-  } else if (t.includes("Done") || t.includes("Ready")) {
+  } else if (t.includes("Done") || t.includes("Ready") || t.includes("Solusi") || t.includes("Tantangan")) {
     statusEl.style.background = "var(--success-light)";
     statusEl.style.color = "var(--success)";
     statusEl.style.borderColor = "#a7f3d0";
@@ -1197,14 +1652,16 @@ const dlg = $("#worldDlg");
 $("#worldBtn").onclick = ()=>{ dlg.showModal(); updateToolHint(); };
 $("#closeWorld").onclick = ()=> dlg.close();
 $("#applySize").onclick = ()=>{
-  const c = clamp(parseInt($("#cols").value||12,10), 2, 40);
-  const r = clamp(parseInt($("#rows").value||12,10), 2, 40);
+  const c = clamp(parseInt($("#cols").value||10,10), 2, 40);
+  const r = clamp(parseInt($("#rows").value||10,10), 2, 40);
   gridCols = c; gridRows = r;
   const preset = $("#preset").value;
   initialWorld = presetWorld(c,r,preset);
   resetToInitial();
   draw();
   dlg.close();
+  $("#challengeSelect").value = "sandbox";
+  selectChallenge("sandbox");
   setStatus("Grid baru siap!");
 };
 
@@ -1294,7 +1751,7 @@ $("#saveWorld").onclick = ()=>{
     world: initialWorld,
     code: $("#code").value,
     timestamp: new Date().toISOString(),
-    version: "1.1"
+    version: "1.2"
   };
   const data = new Blob([JSON.stringify(saveData,null,2)], {type:"application/json"});
   const url = URL.createObjectURL(data);
@@ -1362,7 +1819,6 @@ $("#step").onclick = ()=>{
 $("#pause").onclick = ()=>{ paused = !paused; setStatus(paused ? "Paused" : "Running…"); };
 $("#reset").onclick = ()=>{ 
   resetToInitial(); 
-  setStarterCode();
   playing = false; paused = false; stepping = false;
   setStatus("Reset - Ready");
 };
@@ -1396,33 +1852,10 @@ function copyEditorCode() {
   setStatus("Kode disalin ke clipboard!");
 }
 
-/* ===================== Starter Code ===================== */
-function setStarterCode(){
-  const starter = `// Selamat Datang di Karel Studio!
-// Gunakan instruksi Karel untuk menyelesaikan misi.
-
-// Contoh 1: Maju sampai mentok tembok, lalu belok kiri
-while (front_is_clear()) {
-  move();
-}
-turn_left();
-
-while (front_is_clear()) {
-  move();
-}
-
-// Contoh 2: Taruh bola di setiap langkah
-// put_ball();
-`;
-  $("#code").value = starter;
-}
-
-// Initial Boot
-initialWorld = presetWorld(gridCols,gridRows,"blank");
-world = deepCopy(initialWorld);
-snapshot(); 
-draw(); 
-setStarterCode();
+// Initial Boot: Load Challenge #1 (Stairs)
+window.addEventListener('DOMContentLoaded', () => {
+  selectChallenge("stairs");
+});
 
 // Service Worker Registration
 if ('serviceWorker' in navigator) {
