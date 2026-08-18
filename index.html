@@ -873,23 +873,120 @@ while (no_balls_present()) {<br>
       <!-- Tab 3: API Reference -->
       <div class="tab-content" id="docs-tab">
         <div class="docs-scroll-area">
-          <h2 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 0.75rem;">📚 Karel API Quick Reference</h2>
-          
-          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-            <div class="ct-card">
-              <strong style="color: #0284c7;">🏃 Perintah Gerakan & Tindakan:</strong>
-              <p style="margin-top: 4px;"><code>move()</code> &bull; <code>turn_left()</code> &bull; <code>turn_right()</code> &bull; <code>turn_around()</code> &bull; <code>put_ball()</code> &bull; <code>take_ball()</code></p>
-            </div>
+          <div style="margin-bottom: 1rem;">
+            <h2 style="font-size: 1.15rem; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">📚 Karel API Quick Reference</h2>
+            <p style="font-size: 0.82rem; color: var(--text-muted);">Daftar lengkap perintah aksi, sensor kondisi, dan arah hadap robot Karel beserta keterangannya.</p>
+          </div>
 
-            <div class="ct-card">
-              <strong style="color: #059669;">🔍 Sensor Kondisi (Boolean):</strong>
-              <p style="margin-top: 4px;"><code>front_is_clear()</code> &bull; <code>left_is_clear()</code> &bull; <code>right_is_clear()</code> &bull; <code>balls_present()</code> &bull; <code>no_balls_present()</code></p>
-            </div>
+          <!-- Section 1: Actions -->
+          <div style="margin-bottom: 1.25rem;">
+            <h3 style="font-size: 0.92rem; font-weight: 700; color: #0284c7; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 6px;">
+              <span>🏃 1. Perintah Gerakan & Tindakan (Actions)</span>
+            </h3>
+            <table style="width: 100%; border-collapse: collapse; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); overflow: hidden; box-shadow: var(--shadow-sm); font-size: 0.8rem;">
+              <thead>
+                <tr style="background: #f8fafc; text-align: left; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+                  <th style="padding: 0.6rem 0.8rem; width: 35%;">Perintah (Command)</th>
+                  <th style="padding: 0.6rem 0.8rem;">Penjelasan & Efek pada Karel</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                  <td style="padding: 0.6rem 0.8rem;"><code style="font-family: 'Fira Code', monospace; color: var(--primary); font-weight: 700; background: var(--primary-light); border: 1px solid #c7d2fe; padding: 2px 6px; border-radius: 4px;">move()</code></td>
+                  <td style="padding: 0.6rem 0.8rem; color: var(--text-main); line-height: 1.4;">Maju 1 langkah ke depan sesuai arah hadap robot saat ini. <em>(Error jika menabrak dinding)</em>.</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                  <td style="padding: 0.6rem 0.8rem;"><code style="font-family: 'Fira Code', monospace; color: var(--primary); font-weight: 700; background: var(--primary-light); border: 1px solid #c7d2fe; padding: 2px 6px; border-radius: 4px;">turn_left()</code></td>
+                  <td style="padding: 0.6rem 0.8rem; color: var(--text-main); line-height: 1.4;">Berputar 90° ke arah kiri (berlawanan arah jarum jam).</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                  <td style="padding: 0.6rem 0.8rem;"><code style="font-family: 'Fira Code', monospace; color: var(--primary); font-weight: 700; background: var(--primary-light); border: 1px solid #c7d2fe; padding: 2px 6px; border-radius: 4px;">turn_right()</code></td>
+                  <td style="padding: 0.6rem 0.8rem; color: var(--text-main); line-height: 1.4;">Berputar 90° ke arah kanan (searah jarum jam).</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                  <td style="padding: 0.6rem 0.8rem;"><code style="font-family: 'Fira Code', monospace; color: var(--primary); font-weight: 700; background: var(--primary-light); border: 1px solid #c7d2fe; padding: 2px 6px; border-radius: 4px;">turn_around()</code></td>
+                  <td style="padding: 0.6rem 0.8rem; color: var(--text-main); line-height: 1.4;">Berbalik arah 180° menghadap ke belakang.</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                  <td style="padding: 0.6rem 0.8rem;"><code style="font-family: 'Fira Code', monospace; color: var(--primary); font-weight: 700; background: var(--primary-light); border: 1px solid #c7d2fe; padding: 2px 6px; border-radius: 4px;">put_ball()</code></td>
+                  <td style="padding: 0.6rem 0.8rem; color: var(--text-main); line-height: 1.4;">Menaruh 1 bola di petak tempat Karel berada saat ini.</td>
+                </tr>
+                <tr>
+                  <td style="padding: 0.6rem 0.8rem;"><code style="font-family: 'Fira Code', monospace; color: var(--primary); font-weight: 700; background: var(--primary-light); border: 1px solid #c7d2fe; padding: 2px 6px; border-radius: 4px;">take_ball()</code></td>
+                  <td style="padding: 0.6rem 0.8rem; color: var(--text-main); line-height: 1.4;">Mengambil 1 bola dari petak saat ini. <em>(Error jika tidak ada bola)</em>.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-            <div class="ct-card">
-              <strong style="color: #d97706;">🧭 Sensor Arah Mata Angin:</strong>
-              <p style="margin-top: 4px;"><code>facing_north()</code> &bull; <code>facing_south()</code> &bull; <code>facing_east()</code> &bull; <code>facing_west()</code></p>
-            </div>
+          <!-- Section 2: Condition Sensors -->
+          <div style="margin-bottom: 1.25rem;">
+            <h3 style="font-size: 0.92rem; font-weight: 700; color: #059669; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 6px;">
+              <span>🔍 2. Sensor Kondisi Dinding & Bola (Boolean true / false)</span>
+            </h3>
+            <table style="width: 100%; border-collapse: collapse; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); overflow: hidden; box-shadow: var(--shadow-sm); font-size: 0.8rem;">
+              <thead>
+                <tr style="background: #f8fafc; text-align: left; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+                  <th style="padding: 0.6rem 0.8rem; width: 35%;">Sensor (Boolean)</th>
+                  <th style="padding: 0.6rem 0.8rem;">Kondisi yang Dideteksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                  <td style="padding: 0.6rem 0.8rem;"><code style="font-family: 'Fira Code', monospace; color: #059669; font-weight: 700; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 2px 6px; border-radius: 4px;">front_is_clear()</code></td>
+                  <td style="padding: 0.6rem 0.8rem; color: var(--text-main); line-height: 1.4;">Bernilai <strong>true</strong> jika petak tepat di depan kosong (tidak terhalang dinding/batas arena).</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                  <td style="padding: 0.6rem 0.8rem;"><code style="font-family: 'Fira Code', monospace; color: #059669; font-weight: 700; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 2px 6px; border-radius: 4px;">left_is_clear()</code></td>
+                  <td style="padding: 0.6rem 0.8rem; color: var(--text-main); line-height: 1.4;">Bernilai <strong>true</strong> jika petak di sebelah kiri Karel kosong (bebas dinding).</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                  <td style="padding: 0.6rem 0.8rem;"><code style="font-family: 'Fira Code', monospace; color: #059669; font-weight: 700; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 2px 6px; border-radius: 4px;">right_is_clear()</code></td>
+                  <td style="padding: 0.6rem 0.8rem; color: var(--text-main); line-height: 1.4;">Bernilai <strong>true</strong> jika petak di sebelah kanan Karel kosong (bebas dinding).</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                  <td style="padding: 0.6rem 0.8rem;"><code style="font-family: 'Fira Code', monospace; color: #059669; font-weight: 700; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 2px 6px; border-radius: 4px;">balls_present()</code></td>
+                  <td style="padding: 0.6rem 0.8rem; color: var(--text-main); line-height: 1.4;">Bernilai <strong>true</strong> jika terdapat minimal 1 bola di petak tempat Karel berdiri saat ini.</td>
+                </tr>
+                <tr>
+                  <td style="padding: 0.6rem 0.8rem;"><code style="font-family: 'Fira Code', monospace; color: #059669; font-weight: 700; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 2px 6px; border-radius: 4px;">no_balls_present()</code></td>
+                  <td style="padding: 0.6rem 0.8rem; color: var(--text-main); line-height: 1.4;">Bernilai <strong>true</strong> jika petak tempat Karel berdiri saat ini kosong (tidak ada bola).</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Section 3: Compass Orientation -->
+          <div style="margin-bottom: 1.25rem;">
+            <h3 style="font-size: 0.92rem; font-weight: 700; color: #d97706; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 6px;">
+              <span>🧭 3. Sensor Arah Mata Angin (Orientation)</span>
+            </h3>
+            <table style="width: 100%; border-collapse: collapse; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-sm); overflow: hidden; box-shadow: var(--shadow-sm); font-size: 0.8rem;">
+              <thead>
+                <tr style="background: #f8fafc; text-align: left; color: var(--text-muted); border-bottom: 1px solid var(--border-color);">
+                  <th style="padding: 0.6rem 0.8rem; width: 35%;">Sensor Arah</th>
+                  <th style="padding: 0.6rem 0.8rem;">Kondisi yang Dideteksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                  <td style="padding: 0.6rem 0.8rem;"><code style="font-family: 'Fira Code', monospace; color: #b45309; font-weight: 700; background: #fffbeb; border: 1px solid #fde68a; padding: 2px 6px; border-radius: 4px;">facing_north()</code></td>
+                  <td style="padding: 0.6rem 0.8rem; color: var(--text-main); line-height: 1.4;">Bernilai <strong>true</strong> jika Karel sedang menghadap ke <strong>Utara (Atas)</strong>.</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                  <td style="padding: 0.6rem 0.8rem;"><code style="font-family: 'Fira Code', monospace; color: #b45309; font-weight: 700; background: #fffbeb; border: 1px solid #fde68a; padding: 2px 6px; border-radius: 4px;">facing_south()</code></td>
+                  <td style="padding: 0.6rem 0.8rem; color: var(--text-main); line-height: 1.4;">Bernilai <strong>true</strong> jika Karel sedang menghadap ke <strong>Selatan (Bawah)</strong>.</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                  <td style="padding: 0.6rem 0.8rem;"><code style="font-family: 'Fira Code', monospace; color: #b45309; font-weight: 700; background: #fffbeb; border: 1px solid #fde68a; padding: 2px 6px; border-radius: 4px;">facing_east()</code></td>
+                  <td style="padding: 0.6rem 0.8rem; color: var(--text-main); line-height: 1.4;">Bernilai <strong>true</strong> jika Karel sedang menghadap ke <strong>Timur (Kanan)</strong>.</td>
+                </tr>
+                <tr>
+                  <td style="padding: 0.6rem 0.8rem;"><code style="font-family: 'Fira Code', monospace; color: #b45309; font-weight: 700; background: #fffbeb; border: 1px solid #fde68a; padding: 2px 6px; border-radius: 4px;">facing_west()</code></td>
+                  <td style="padding: 0.6rem 0.8rem; color: var(--text-main); line-height: 1.4;">Bernilai <strong>true</strong> jika Karel sedang menghadap ke <strong>Barat (Kiri)</strong>.</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
