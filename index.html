@@ -795,6 +795,17 @@
             <p style="font-size: 0.82rem; color: var(--text-muted);">Penerapan pola pikir komputasional dalam menyelesaikan tantangan pemrograman Karel.</p>
           </div>
 
+          <!-- Anatomi & Alur Eksekusi Card -->
+          <div class="ct-card" style="background: linear-gradient(135deg, #ffffff 0%, #eef2ff 100%); border-color: #c7d2fe; margin-bottom: 0.85rem;">
+            <div class="ct-card-header" style="color: var(--primary);">
+              <span>💡 Anatomi Program & Alur Eksekusi</span>
+            </div>
+            <p style="color: var(--text-main); font-size: 0.8rem; line-height: 1.55; margin-bottom: 0;">
+              <strong>1. 🚀 Program Utama (<code>function main()</code>)</strong>: Titik awal komputer mulai membaca & mengeksekusi instruksi saat tombol <strong>Run</strong> ditekan.<br>
+              <strong>2. 📦 Sub-Fungsi (<code>function nama()</code>)</strong>: Kumpulan langkah modular yang didefinisikan seperti "kamus resep". Sub-fungsi disimpan terlebih dahulu dan baru akan bekerja saat namanya dipanggil di dalam <code>main()</code>.
+            </p>
+          </div>
+
           <div class="ct-grid">
             <div class="ct-card">
               <div class="ct-card-header">
@@ -958,40 +969,28 @@ const CHALLENGES = {
     setupWorld(w) {
       w.karel = { x: 0, y: 7, dir: "E" };
       // Stair walls
-      // Step 1
       w.vWalls[7][0] = true; w.hWalls[6][1] = true;
-      // Step 2
       w.vWalls[6][1] = true; w.hWalls[5][2] = true;
-      // Step 3
       w.vWalls[5][2] = true; w.hWalls[4][3] = true;
-      // Step 4
       w.vWalls[4][3] = true; w.hWalls[3][4] = true;
     },
-    starterCode: `// Tantangan 1: Naik Tangga & Tanam Bendera
-// Pilar CT: Dekomposisi (Buat fungsi step_up dan turn_right)
-
-function turn_right() {
-  turn_left();
-  turn_left();
-  turn_left();
-}
-
-function step_up() {
-  // Tulis langkah menaiki 1 anak tangga di sini:
+    starterCode: `/* ========================================================
+   🚀 1. PROGRAM UTAMA (Main Program)
+   Komputer selalu memulai eksekusi dari fungsi main() ini!
+   ======================================================== */
+function main() {
+  // Naikkan Karel 1 anak tangga terlebih dahulu:
+  step_up();
   
+  // 💡 LATIHAN: Panggil step_up() 3 kali lagi hingga puncak,
+  // lalu panggil put_ball() untuk menanam bendera!
 }
 
-// Naikkan Karel sebanyak 4 anak tangga, lalu put_ball() di puncak!
-`,
-    solutionCode: `// SOLUSI Tantangan 1: Naik Tangga & Tanam Bendera
-// Dekomposisi: Memecah tugas menjadi fungsi modular
-
-function turn_right() {
-  turn_left();
-  turn_left();
-  turn_left();
-}
-
+/* ========================================================
+   📦 2. DEFINISI SUB-FUNGSI (Helper Functions)
+   Didefinisikan terlebih dahulu seperti "resep",
+   lalu dipanggil namanya di dalam Program Utama di atas.
+   ======================================================== */
 function step_up() {
   turn_left();
   move();
@@ -999,13 +998,40 @@ function step_up() {
   move();
 }
 
-// Ulangi 4 kali untuk naik ke puncak tangga
-for (let i = 0; i < 4; i++) {
-  step_up();
+function turn_right() {
+  turn_left();
+  turn_left();
+  turn_left();
+}
+`,
+    solutionCode: `/* ========================================================
+   🚀 1. PROGRAM UTAMA (Main Program - Titik Awal Eksekusi)
+   ======================================================== */
+function main() {
+  // Ulangi 4 kali untuk naik ke puncak tangga
+  for (let i = 0; i < 4; i++) {
+    step_up();
+  }
+
+  // Tanam bola bendera di puncak
+  put_ball();
 }
 
-// Tanam bola bendera di puncak
-put_ball();
+/* ========================================================
+   📦 2. DEFINISI SUB-FUNGSI (Dekomposisi Masalah)
+   ======================================================== */
+function step_up() {
+  turn_left();
+  move();
+  turn_right();
+  move();
+}
+
+function turn_right() {
+  turn_left();
+  turn_left();
+  turn_left();
+}
 `
   },
 
@@ -1020,29 +1046,40 @@ put_ball();
       // Place scattered balls along bottom row
       [1, 3, 4, 6, 7, 9].forEach(x => { w.balls[5][x] = 1; });
     },
-    starterCode: `// Tantangan 2: Panen Semua Bola
-// Pilar CT: Pengenalan Pola & Looping
+    starterCode: `/* ========================================================
+   🚀 1. PROGRAM UTAMA (Main Program)
+   ======================================================== */
+function main() {
+  // Telusuri baris kebun dan ambil bola jika ada
+  while (front_is_clear()) {
+    if (balls_present()) {
+      take_ball();
+    }
+    move();
+  }
 
-// Gunakan while(front_is_clear()) dan if(balls_present())
-while (front_is_clear()) {
-  // Ambil bola jika ada di posisi ini:
-  
-  move();
-}
-`,
-    solutionCode: `// SOLUSI Tantangan 2: Panen Semua Bola
-// Pengenalan Pola: Setiap langkah mengecek keberadaan bola
-
-while (front_is_clear()) {
+  // Cek bola di petak paling ujung:
   if (balls_present()) {
     take_ball();
   }
-  move();
 }
+`,
+    solutionCode: `/* ========================================================
+   🚀 1. PROGRAM UTAMA (Pengenalan Pola & Looping)
+   ======================================================== */
+function main() {
+  // Selama jalan di depan kosong, maju dan cek bola di setiap petak
+  while (front_is_clear()) {
+    if (balls_present()) {
+      take_ball();
+    }
+    move();
+  }
 
-// Cek posisi paling ujung setelah selesai jalan
-if (balls_present()) {
-  take_ball();
+  // Ambil bola di petak paling akhir jika ada
+  if (balls_present()) {
+    take_ball();
+  }
 }
 `
   },
@@ -1064,22 +1101,31 @@ if (balls_present()) {
       // Finish ball at (11, 5)
       w.balls[5][11] = 1;
     },
-    starterCode: `// Tantangan 3: Lompat Rintangan Tembok
-// Pilar CT: Abstraksi & Kondisional Adaptif
+    starterCode: `/* ========================================================
+   🚀 1. PROGRAM UTAMA (Main Program - Titik Awal Eksekusi)
+   ======================================================== */
+function main() {
+  // Jika depan ada tembok, panggil jump_hurdle()
+  if (!front_is_clear()) {
+    jump_hurdle();
+  } else {
+    move();
+  }
 
-function turn_right() {
-  turn_left();
-  turn_left();
-  turn_left();
+  // 💡 LATIHAN: Untuk melompati SEMUA rintangan hingga bola finish,
+  // gunakan perulangan: while (no_balls_present()) { ... }
 }
 
+/* ========================================================
+   📦 2. DEFINISI SUB-FUNGSI (Helper Functions)
+   ======================================================== */
 function jump_hurdle() {
-  // 1. Belok kiri & naik melewati tembok:
   turn_left();
+  // 1. Naik melewati puncak rintangan:
   while (!right_is_clear()) {
     move();
   }
-  // 2. Belok kanan & lewati atas tembok:
+  // 2. Lewati atas rintangan:
   turn_right();
   move();
   turn_right();
@@ -1090,22 +1136,29 @@ function jump_hurdle() {
   turn_left();
 }
 
-// Coba jalankan kode ini atau klik "💡 Muat Solusi" di atas!
-if (!front_is_clear()) {
-  jump_hurdle();
-} else {
-  move();
-}
-`,
-    solutionCode: `// SOLUSI Tantangan 3: Lompat Rintangan Tembok
-// Fungsi melompati tembok dengan ketinggian adaptif
-
 function turn_right() {
   turn_left();
   turn_left();
   turn_left();
 }
+`,
+    solutionCode: `/* ========================================================
+   🚀 1. PROGRAM UTAMA (Main Program - Titik Awal Eksekusi)
+   ======================================================== */
+function main() {
+  // Terus berlari hingga menemukan bola di garis finish
+  while (no_balls_present()) {
+    if (!front_is_clear()) {
+      jump_hurdle(); // Panggil fungsi lompat saat ada rintangan
+    } else {
+      move();
+    }
+  }
+}
 
+/* ========================================================
+   📦 2. DEFINISI SUB-FUNGSI (Abstraksi & Sub-rutin)
+   ======================================================== */
 function jump_hurdle() {
   turn_left();
   // Naik sampai melewati pucuk tembok
@@ -1122,13 +1175,10 @@ function jump_hurdle() {
   turn_left();
 }
 
-// Bergerak sampai menemukan bola garis finish
-while (no_balls_present()) {
-  if (!front_is_clear()) {
-    jump_hurdle();
-  } else {
-    move();
-  }
+function turn_right() {
+  turn_left();
+  turn_left();
+  turn_left();
 }
 `
   },
@@ -1150,38 +1200,23 @@ while (no_balls_present()) {
       // Exit goal ball at (9, 0)
       w.balls[0][9] = 1;
     },
-    starterCode: `// Tantangan 4: Escape the Maze
-// Pilar CT: Perancangan Algoritma (Right-Hand Rule)
+    starterCode: `/* ========================================================
+   🚀 1. PROGRAM UTAMA (Main Program)
+   ======================================================== */
+function main() {
+  // Coba 1 langkah navigasi Aturan Tangan Kanan:
+  step_wall_follower();
 
-function turn_right() {
-  turn_left();
-  turn_left();
-  turn_left();
+  // 💡 LATIHAN: Ulangi sampai menemukan bola pintu keluar:
+  // while (no_balls_present()) {
+  //   step_wall_follower();
+  // }
 }
 
-// Coba satu langkah aturan tangan kanan:
-if (right_is_clear()) {
-  turn_right();
-  move();
-} else if (front_is_clear()) {
-  move();
-} else {
-  turn_left();
-}
-
-// 💡 TIP: Untuk menyelesaikan labirin penuh, bungkus logika di atas dengan while(no_balls_present())
-// Atau klik "💡 Muat Solusi" di atas!
-`,
-    solutionCode: `// SOLUSI Tantangan 4: Escape the Maze
-// Algoritma Klasik Wall Follower (Aturan Tangan Kanan)
-
-function turn_right() {
-  turn_left();
-  turn_left();
-  turn_left();
-}
-
-while (no_balls_present()) {
+/* ========================================================
+   📦 2. DEFINISI SUB-FUNGSI (Algoritma Navigasi)
+   ======================================================== */
+function step_wall_follower() {
   if (right_is_clear()) {
     turn_right();
     move();
@@ -1190,6 +1225,42 @@ while (no_balls_present()) {
   } else {
     turn_left();
   }
+}
+
+function turn_right() {
+  turn_left();
+  turn_left();
+  turn_left();
+}
+`,
+    solutionCode: `/* ========================================================
+   🚀 1. PROGRAM UTAMA (Main Program - Titik Awal Eksekusi)
+   ======================================================== */
+function main() {
+  // Jalankan aturan tangan kanan sampai tiba di bola pintu keluar
+  while (no_balls_present()) {
+    step_wall_follower();
+  }
+}
+
+/* ========================================================
+   📦 2. DEFINISI SUB-FUNGSI (Algoritma Tangan Kanan)
+   ======================================================== */
+function step_wall_follower() {
+  if (right_is_clear()) {
+    turn_right();
+    move();
+  } else if (front_is_clear()) {
+    move();
+  } else {
+    turn_left();
+  }
+}
+
+function turn_right() {
+  turn_left();
+  turn_left();
+  turn_left();
 }
 `
   },
@@ -1203,10 +1274,18 @@ while (no_balls_present()) {
     setupWorld(w) {
       w.karel = { x: 0, y: 7, dir: "E" };
     },
-    starterCode: `// Tantangan 5: Pola Papan Catur
-// Pilar CT: Pengenalan Pola & Struktur Bersarang
+    starterCode: `/* ========================================================
+   🚀 1. PROGRAM UTAMA (Main Program)
+   ======================================================== */
+function main() {
+  // Isi baris pertama dengan pola selang-seling
+  fill_checker_row();
+}
 
-function fill_row() {
+/* ========================================================
+   📦 2. DEFINISI SUB-FUNGSI (Pola Checkerboard)
+   ======================================================== */
+function fill_checker_row() {
   put_ball();
   while (front_is_clear()) {
     move();
@@ -1216,13 +1295,19 @@ function fill_row() {
     }
   }
 }
-
-fill_row();
 `,
-    solutionCode: `// SOLUSI Tantangan 5: Pola Papan Catur
-// Melakukan pengecekan lompat 2 langkah per penempatan bola
+    solutionCode: `/* ========================================================
+   🚀 1. PROGRAM UTAMA (Main Program)
+   ======================================================== */
+function main() {
+  // Tanam bola berselang-seling di sepanjang baris
+  fill_checker_row();
+}
 
-function fill_row() {
+/* ========================================================
+   📦 2. DEFINISI SUB-FUNGSI (Pola Lompat 2 Langkah)
+   ======================================================== */
+function fill_checker_row() {
   put_ball();
   while (front_is_clear()) {
     move();
@@ -1232,8 +1317,6 @@ function fill_row() {
     }
   }
 }
-
-fill_row();
 `
   },
 
@@ -1246,26 +1329,32 @@ fill_row();
     setupWorld(w) {
       w.karel = { x: 0, y: 9, dir: "E" };
     },
-    starterCode: `// Selamat Datang di Mode Bebas Karel Studio!
-// Gunakan instruksi Karel untuk menyelesaikan ide Anda.
-
-while (front_is_clear()) {
-  move();
-}
-turn_left();
-while (front_is_clear()) {
-  move();
+    starterCode: `/* ========================================================
+   🚀 1. PROGRAM UTAMA (Main Program)
+   ======================================================== */
+function main() {
+  while (front_is_clear()) {
+    move();
+  }
+  turn_left();
+  while (front_is_clear()) {
+    move();
+  }
 }
 `,
-    solutionCode: `// Contoh Kode Eksplorasi
-while (front_is_clear()) {
-  put_ball();
-  move();
-}
-turn_left();
-while (front_is_clear()) {
-  put_ball();
-  move();
+    solutionCode: `/* ========================================================
+   🚀 1. PROGRAM UTAMA (Main Program)
+   ======================================================== */
+function main() {
+  while (front_is_clear()) {
+    put_ball();
+    move();
+  }
+  turn_left();
+  while (front_is_clear()) {
+    put_ball();
+    move();
+  }
 }
 `
   }
@@ -1654,7 +1743,8 @@ async function playFrames(){
 
 function secureEval(userCode, api){
   const apiNames = Object.keys(api);
-  const fn = new Function(...apiNames, `"use strict";\n${userCode}\n`);
+  const wrapped = `"use strict";\n${userCode}\nif(typeof main === 'function'){ main(); }`;
+  const fn = new Function(...apiNames, wrapped);
   fn(...apiNames.map(k=>api[k]));
 }
 
