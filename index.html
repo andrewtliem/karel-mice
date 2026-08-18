@@ -1074,17 +1074,27 @@ function turn_right() {
 }
 
 function jump_hurdle() {
-  // Buat fungsi melompati tembok setinggi apa pun:
-  
-}
-
-// Maju sampai menemukan bola finish di ujung
-while (no_balls_present()) {
-  if (!front_is_clear()) {
-    jump_hurdle();
-  } else {
+  // 1. Belok kiri & naik melewati tembok:
+  turn_left();
+  while (!right_is_clear()) {
     move();
   }
+  // 2. Belok kanan & lewati atas tembok:
+  turn_right();
+  move();
+  turn_right();
+  // 3. Turun ke lantai tanah:
+  while (front_is_clear()) {
+    move();
+  }
+  turn_left();
+}
+
+// Coba jalankan kode ini atau klik "💡 Muat Solusi" di atas!
+if (!front_is_clear()) {
+  jump_hurdle();
+} else {
+  move();
 }
 `,
     solutionCode: `// SOLUSI Tantangan 3: Lompat Rintangan Tembok
@@ -1149,14 +1159,18 @@ function turn_right() {
   turn_left();
 }
 
-// Algoritma Wall Follower (Tangan Kanan):
-// 1. Jika kanan kosong -> belok kanan & maju
-// 2. Jika tidak, jika depan kosong -> maju
-// 3. Jika tidak -> belok kiri
-while (no_balls_present()) {
-  // Lengkapi logika di sini:
-  
+// Coba satu langkah aturan tangan kanan:
+if (right_is_clear()) {
+  turn_right();
+  move();
+} else if (front_is_clear()) {
+  move();
+} else {
+  turn_left();
 }
+
+// 💡 TIP: Untuk menyelesaikan labirin penuh, bungkus logika di atas dengan while(no_balls_present())
+// Atau klik "💡 Muat Solusi" di atas!
 `,
     solutionCode: `// SOLUSI Tantangan 4: Escape the Maze
 // Algoritma Klasik Wall Follower (Aturan Tangan Kanan)
@@ -1500,10 +1514,21 @@ function resetToInitial(){
   setStatus("Ready"); 
 }
 
-/* ===================== Karel API ===================== */
+/* ===================== Karel API & Loop Watchdog ===================== */
 function makeAPI(){
+  let opCount = 0;
+  const MAX_OPERATIONS = 5000;
+  
+  function checkLoopGuard(){
+    opCount++;
+    if(opCount > MAX_OPERATIONS){
+      throw new Error("Perulangan tanpa henti (Infinite Loop) terdeteksi! Kode melebihi 5.000 operasi. Pastikan perulangan (while) Anda dapat mencapai kondisi selesai.");
+    }
+  }
+
   return {
     move(){
+      checkLoopGuard();
       const {karel} = world;
       const [dx,dy] = VEC[karel.dir];
       const nx = karel.x + dx, ny = karel.y + dy;
@@ -1513,44 +1538,49 @@ function makeAPI(){
       karel.x = nx; karel.y = ny;
       snapshot();
     },
-    turn_left(){ rotateLeft(); snapshot(); },
+    turn_left(){ checkLoopGuard(); rotateLeft(); snapshot(); },
     put_ball(){
+      checkLoopGuard();
       world.balls[world.karel.y][world.karel.x] += 1; 
       snapshot();
     },
     take_ball(){
+      checkLoopGuard();
       const {x,y} = world.karel;
       if(world.balls[y][x] <= 0) throw new Error("Tidak ada bola di posisi ini.");
       world.balls[y][x] -= 1; 
       snapshot();
     },
     front_is_clear(){
+      checkLoopGuard();
       const {karel} = world;
       const [dx,dy] = VEC[karel.dir]; const nx = karel.x+dx, ny = karel.y+dy;
       return inBounds(nx,ny) && !wallBetween(karel.x,karel.y,nx,ny);
     },
     left_is_clear(){
+      checkLoopGuard();
       const d = leftOf(world.karel.dir);
       const [dx,dy] = VEC[d]; const nx = world.karel.x+dx, ny = world.karel.y+dy;
       return inBounds(nx,ny) && !wallBetween(world.karel.x,world.karel.y,nx,ny);
     },
     right_is_clear(){
+      checkLoopGuard();
       const d = rightOf(world.karel.dir);
       const [dx,dy] = VEC[d]; const nx = world.karel.x+dx, ny = world.karel.y+dy;
       return inBounds(nx,ny) && !wallBetween(world.karel.x,world.karel.y,nx,ny);
     },
-    facing_north(){ return world.karel.dir === "N"; },
-    facing_south(){ return world.karel.dir === "S"; },
-    facing_east(){ return world.karel.dir === "E"; },
-    facing_west(){ return world.karel.dir === "W"; },
-    not_facing_north(){ return world.karel.dir !== "N"; },
-    not_facing_south(){ return world.karel.dir !== "S"; },
-    not_facing_east(){ return world.karel.dir !== "E"; },
-    not_facing_west(){ return world.karel.dir !== "W"; },
-    balls_present(){ return world.balls[world.karel.y][world.karel.x] > 0; },
-    no_balls_present(){ return world.balls[world.karel.y][world.karel.x] === 0; },
-    turn_right(){ rotateRight(); snapshot(); },
-    turn_around(){ rotateRight(); rotateRight(); snapshot(); }
+    facing_north(){ checkLoopGuard(); return world.karel.dir === "N"; },
+    facing_south(){ checkLoopGuard(); return world.karel.dir === "S"; },
+    facing_east(){ checkLoopGuard(); return world.karel.dir === "E"; },
+    facing_west(){ checkLoopGuard(); return world.karel.dir === "W"; },
+    not_facing_north(){ checkLoopGuard(); return world.karel.dir !== "N"; },
+    not_facing_south(){ checkLoopGuard(); return world.karel.dir !== "S"; },
+    not_facing_east(){ checkLoopGuard(); return world.karel.dir !== "E"; },
+    not_facing_west(){ checkLoopGuard(); return world.karel.dir !== "W"; },
+    balls_present(){ checkLoopGuard(); return world.balls[world.karel.y][world.karel.x] > 0; },
+    no_balls_present(){ checkLoopGuard(); return world.balls[world.karel.y][world.karel.x] === 0; },
+    turn_right(){ checkLoopGuard(); rotateRight(); snapshot(); },
+    turn_around(){ checkLoopGuard(); rotateRight(); rotateRight(); snapshot(); }
   };
 }
 
