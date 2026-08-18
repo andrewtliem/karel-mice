@@ -979,11 +979,13 @@ const CHALLENGES = {
    Komputer selalu memulai eksekusi dari fungsi main() ini!
    ======================================================== */
 function main() {
-  // Naikkan Karel 1 anak tangga terlebih dahulu:
-  step_up();
-  
-  // 💡 LATIHAN: Panggil step_up() 3 kali lagi hingga puncak,
-  // lalu panggil put_ball() untuk menanam bendera!
+  // 💡 Selama depan masih terhalang dinding anak tangga, panjat terus:
+  while (!front_is_clear()) {
+    step_up();
+  }
+
+  // Tanam bola bendera setelah tiba di puncak:
+  put_ball();
 }
 
 /* ========================================================
@@ -1008,12 +1010,12 @@ function turn_right() {
    🚀 1. PROGRAM UTAMA (Main Program - Titik Awal Eksekusi)
    ======================================================== */
 function main() {
-  // Ulangi 4 kali untuk naik ke puncak tangga
-  for (let i = 0; i < 4; i++) {
+  // Selama depan terhalang dinding anak tangga, panjat terus!
+  while (!front_is_clear()) {
     step_up();
   }
 
-  // Tanam bola bendera di puncak
+  // Tanam bola bendera di puncak tangga
   put_ball();
 }
 
