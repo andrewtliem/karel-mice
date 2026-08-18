@@ -2,12 +2,12 @@
   "name": "Karel Playground",
   "short_name": "Karel",
   "description": "Interactive Karel programming playground for learning algorithms and programming concepts",
-  "start_url": "/",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#06b6d4",
   "orientation": "landscape-primary",
-  "scope": "/",
+  "scope": "./",
   "lang": "en",
   "categories": ["education", "productivity", "utilities"],
   "icons": [
@@ -65,7 +65,7 @@
       "name": "Run Code",
       "short_name": "Run",
       "description": "Execute Karel code",
-      "url": "/?action=run",
+      "url": "./index.html?action=run",
       "icons": [
         {
           "src": "icons/icon-96x96.png",
@@ -77,7 +77,7 @@
       "name": "World Builder",
       "short_name": "Build",
       "description": "Create custom worlds",
-      "url": "/?action=builder",
+      "url": "./index.html?action=builder",
       "icons": [
         {
           "src": "icons/icon-96x96.png",
